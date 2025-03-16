@@ -32,7 +32,7 @@
                 return;
             }
 
-            fetch("YOUR_SCRIPT_URL_HERE?id=" + memberId)
+            fetch("https://script.google.com/macros/s/AKfycbxxNBTdTMJe-56kgLR4LacDMM2mc2uR90aQPss8EAaWVa4kW46kT2Sq6XkzqaYtEiZFbg/exec?id=" + memberId)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
