@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Lookup & Update</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 10px 5px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Member Lookup & Update</h2>
+        <input type="text" id="memberId" placeholder="Enter ITS No.">
+        <button onclick="fetchMemberData()">Search</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        let currentMemberData = {}; // Store current data for updates
+
+        function fetchMemberData() {
+            const memberId = document.getElementById("memberId").value.trim();
+            if (!memberId) {
+                alert("Please enter a valid ITS No.");
+                return;
+            }
+
+            const apiUrl = "https://script.google.com/macros/s/AKfycby1XH42FMUgqmNfFtZrSbou1qPqvknLQdjjxLnHwvPWtDEkMj5ZloN-H5IdJi1ShHPAww/exec?id=" + memberId;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const resultDiv = document.getElementById("result");
+                    resultDiv.innerHTML = "";
+
+                    if (data.error) {
+                        resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
+                    } else {
+                        currentMemberData = data; // Store data for update
+
+                        resultDiv.innerHTML = `
+                            <img src="${data.uploadPic}" class="profile-pic" alt="Profile Picture">
+                            <div class="member-details">
+                                <label>Title:</label>
+                                <input type="text" id="title" value="${data.title}">
+                                
+                                <label>First Name:</label>
+                                <input type="text" id="firstName" value="${data.firstName}">
+                                
+                                <label>Last Name:</label>
+                                <input type="text" id="lastName" value="${data.lastName}">
+                                
+                                <label>Team No:</label>
+                                <input type="text" id="teamNumber" value="${data.teamNumber}">
+                                
+                                <label>Calling No:</label>
+                                <input type="text" id="callingNumber" value="${data.callingNumber}">
+                                
+                                <label>Age:</label>
+                                <input type="text" id="age" value="${data.age}">
+                                
+                                <label>City:</label>
+                                <input type="text" id="city" value="${data.city}">
+                                
+                                <label>Country:</label>
+                                <input type="text" id="country" value="${data.country}">
+                                
+                                <label>Hifz Status:</label>
+                                <input type="text" id="hifzStatus" value="${data.hifzStatus}">
+                                
+                                <label>Qualification:</label>
+                                <input type="text" id="qualification" value="${data.qualification}">
+                                
+                                <label>Skills:</label>
+                                <textarea id="skills">${data.skills}</textarea>
+                                
+                                <label>Hobbies:</label>
+                                <textarea id="hobby">${data.hobby}</textarea>
+
+                                <button onclick="updateMemberData()">Update</button>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                    document.getElementById("result").innerHTML = `<p class="error">Failed to fetch data. Please try again.</p>`;
+                });
+        }
+
+        function updateMemberData() {
+            const updatedData = {
+                itsno: currentMemberData.itsno,
+                title: document.getElementById("title").value,
+                firstName: document.getElementById("firstName").value,
+                lastName: document.getElementById("lastName").value,
+                teamNumber: document.getElementById("teamNumber").value,
+                callingNumber: document.getElementById("callingNumber").value,
+                age: document.getElementById("age").value,
+                city: document.getElementById("city").value,
+                country: document.getElementById("country").value,
+                hifzStatus: document.getElementById("hifzStatus").value,
+                qualification: document.getElementById("qualification").value,
+                skills: document.getElementById("skills").value,
+                hobby: document.getElementById("hobby").value
+            };
+
+            fetch("https://script.google.com/macros/s/AKfycby1XH42FMUgqmNfFtZrSbou1qPqvknLQdjjxLnHwvPWtDEkMj5ZloN-H5IdJi1ShHPAww/exec", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("result").innerHTML += `<p class="success">${data.success}</p>`;
+                } else {
+                    document.getElementById("result").innerHTML += `<p class="error">${data.error}</p>`;
+                }
+            })
+            .catch(error => {
+                console.error("Error updating data:", error);
+                document.getElementById("result").innerHTML += `<p class="error">Failed to update. Please try again.</p>`;
+            });
+        }
+    </script>
+</body>
+</html>
