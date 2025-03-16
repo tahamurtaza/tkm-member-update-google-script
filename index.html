@@ -3,232 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Lookup & Update</title>
+    <title>Member Data Update</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
+            margin: 20px;
             padding: 20px;
-            text-align: center;
             background-color: #f4f4f4;
         }
         .container {
-            max-width: 500px;
-            margin: auto;
+            max-width: 600px;
             background: white;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-weight: bold;
         }
         input, select, textarea {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+            padding: 8px;
+            margin: 5px 0;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 4px;
         }
         button {
-            padding: 10px 15px;
-            margin: 10px 5px;
             background: #28a745;
             color: white;
+            padding: 10px;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
         }
         button:hover {
             background: #218838;
         }
-        .profile-pic {
+        img {
             width: 100px;
             height: 100px;
             object-fit: cover;
-            border-radius: 50%;
             margin-top: 10px;
-        }
-        .error {
-            color: red;
-        }
-        .success {
-            color: green;
-        }
-        #uploadLanyardImage {
-            display: none;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Member Lookup & Update</h2>
-        <input type="text" id="memberId" placeholder="Enter ITS No.">
-        <button onclick="fetchMemberData()">Search</button>
-        <div id="result"></div>
+        <h2>Update Member Details</h2>
+        <label for="itsno">ITS No. (Required)</label>
+        <input type="text" id="itsno" required>
+        <button onclick="fetchMemberData()">Fetch Data</button>
+
+        <div id="formSection" style="display:none;">
+            <label for="title">Title</label>
+            <select id="title">
+                <option value="Mr">Mr</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Miss">Miss</option>
+            </select>
+
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName">
+
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName">
+
+            <label for="teamNumber">Team No.</label>
+            <input type="text" id="teamNumber">
+
+            <label for="callingNo">Calling No.</label>
+            <input type="text" id="callingNo">
+
+            <label for="whatsappNo">WhatsApp No.</label>
+            <input type="text" id="whatsappNo">
+
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob">
+
+            <label for="age">Age</label>
+            <input type="text" id="age">
+
+            <label for="address1">Address Line 1</label>
+            <input type="text" id="address1">
+
+            <label for="address2">Address Line 2</label>
+            <input type="text" id="address2">
+
+            <label for="city">City</label>
+            <input type="text" id="city">
+
+            <label for="country">Country</label>
+            <input type="text" id="country">
+
+            <label for="hifzStatus">Hifz Status</label>
+            <select id="hifzStatus">
+                <option value="Hafiz">Hafiz</option>
+                <option value="Not Hafiz">Not Hafiz</option>
+            </select>
+
+            <label for="qualification">Qualification</label>
+            <input type="text" id="qualification">
+
+            <label for="otherSanstha">Other Sanstha</label>
+            <input type="text" id="otherSanstha">
+
+            <label for="attendingSabaq">Attending Sabaq</label>
+            <select id="attendingSabaq">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+
+            <label for="skills">Skills</label>
+            <textarea id="skills"></textarea>
+
+            <label for="hobbies">Hobbies</label>
+            <textarea id="hobbies"></textarea>
+
+            <label for="jacket">Jacket</label>
+            <input type="text" id="jacket">
+
+            <label for="lanyard">Lanyard</label>
+            <input type="text" id="lanyard">
+
+            <label for="lanyardImage">Lanyard Image</label>
+            <input type="text" id="lanyardImage">
+
+            <label for="balighStatus">Baligh Status</label>
+            <input type="text" id="balighStatus">
+
+            <label for="sports">Sports</label>
+            <input type="text" id="sports">
+
+            <label for="occupation">Occupation</label>
+            <input type="text" id="occupation">
+
+            <label for="specifyOccupation">Specify Occupation</label>
+            <input type="text" id="specifyOccupation">
+
+            <label for="profilePicture">Profile Picture</label>
+            <input type="text" id="profilePicture">
+            <img id="profilePreview" src="" alt="Profile Picture">
+
+            <button onclick="updateMember()">Update Member</button>
+        </div>
     </div>
 
     <script>
+        const scriptURL = "https://script.google.com/macros/s/AKfycbz7Pr33ClhJYpzMuqNTG8yQbwhxMN3sncrPHCDJHWHFjAA081saKv1-n-kZJCEpXgcrSQ/exec";
+
         function fetchMemberData() {
-            const memberId = document.getElementById("memberId").value.trim();
-            if (!memberId) {
-                alert("Please enter a valid ITS No.");
+            const itsNo = document.getElementById("itsno").value.trim();
+            if (!itsNo) {
+                alert("Please enter ITS No.");
                 return;
             }
 
-            const apiUrl = "https://script.google.com/macros/s/AKfycbw5v9iCyLFX3j7gFaz5_bIe5bYgrJqqOiAhvNFKN5MDR-pH4nGnyia87KYcLdTN_YZyRg/exec?id=" + memberId;
-
-            fetch(apiUrl)
+            fetch(`${scriptURL}?id=${itsNo}`)
                 .then(response => response.json())
                 .then(data => {
-                    const resultDiv = document.getElementById("result");
-                    resultDiv.innerHTML = "";
-
                     if (data.error) {
-                        resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
-                    } else {
-                        resultDiv.innerHTML = `
-                            <label>Title:</label>
-                            <select id="title">
-                                <option value="Bhai">Bhai</option>
-                                <option value="Sheikh">Sheikh</option>
-                                <option value="Mulla">Mulla</option>
-                            </select>
-
-                            <label>First Name:</label>
-                            <input type="text" id="firstName" value="${data.firstName}">
-
-                            <label>Last Name:</label>
-                            <input type="text" id="lastName" value="${data.lastName}">
-
-                            <label>Team No:</label>
-                            <input type="text" id="teamNumber" value="${data.teamNumber}">
-
-                            <label>Calling No:</label>
-                            <input type="text" id="callingNumber" value="${data.callingNumber}">
-
-                            <label>WhatsApp No:</label>
-                            <input type="text" id="whatsappNumber" value="${data.whatsappNumber || ""}">
-
-                            <label>Date of Birth:</label>
-                            <input type="date" id="dob" value="${data.dob}">
-
-                            <label>Age:</label>
-                            <input type="number" id="age" value="${data.age}">
-
-                            <label>Address Line 1:</label>
-                            <input type="text" id="address1" value="${data.address1}">
-
-                            <label>Address Line 2:</label>
-                            <input type="text" id="address2" value="${data.address2}">
-
-                            <label>City:</label>
-                            <select id="city">
-                                <option value="Sharjah">Sharjah</option>
-                                <option value="Dubai">Dubai</option>
-                                <option value="Ajman">Ajman</option>
-                            </select>
-
-                            <label>Country:</label>
-                            <input type="text" id="country" value="${data.country}">
-
-                            <label>Hifz Status:</label>
-                            <select id="hifzStatus">
-                                <option value="Surat Al Asar">Surat Al Asar</option>
-                                <option value="Surat Al Balad">Surat Al Balad</option>
-                                <option value="Surat Al Inshiqaq">Surat Al Inshiqaq</option>
-                                <option value="Hafiz">Hafiz</option>
-                                <option value="Marhala Nihaiyyah (21-25)">Marhala Nihaiyyah (21-25)</option>
-                            </select>
-
-                            <label>Qualification:</label>
-                            <input type="text" id="qualification" value="${data.qualification}">
-
-                            <label>Are you part of any other Sanstha?</label>
-                            <select id="otherSanstha">
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-
-                            <label>Attending Sabaq?</label>
-                            <select id="attendingSabak">
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-
-                            <label>Skills:</label>
-                            <input type="text" id="skills" value="${data.skills}">
-
-                            <label>Hobbies:</label>
-                            <input type="text" id="hobbies" value="${data.hobbies}">
-
-                            <label>Do you have a jacket?</label>
-                            <select id="jacket">
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-
-                            <label>Do you have a lanyard?</label>
-                            <select id="lanyard" onchange="toggleLanyardImage()">
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-
-                            <div id="lanyardImageDiv" style="display:none;">
-                                <label>Upload Lanyard Image:</label>
-                                <input type="file" id="uploadLanyardImage">
-                            </div>
-
-                            <label>Are you Baligh?</label>
-                            <select id="baligh">
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-
-                            <label>Which of these sports can you do?</label>
-                            <select id="sports">
-                                <option value="Swimming">Swimming</option>
-                                <option value="Archery">Archery</option>
-                                <option value="Horse Riding">Horse Riding</option>
-                            </select>
-
-                            <label>What is your occupation?</label>
-                            <select id="occupation" onchange="toggleSpecifyOccupation()">
-                                <option value="Student">Student</option>
-                                <option value="Engineer">Engineer</option>
-                                <option value="Doctor">Doctor</option>
-                                <option value="Business">Business</option>
-                                <option value="Other">Other</option>
-                            </select>
-
-                            <div id="specifyOccupationDiv" style="display:none;">
-                                <label>Specify Occupation:</label>
-                                <input type="text" id="specifyOccupation">
-                            </div>
-
-                            <label>Upload Profile Picture:</label>
-                            <input type="file" id="uploadPic">
-                            <img src="${data.uploadPic}" class="profile-pic" alt="Profile Picture">
-
-                            <button onclick="updateMemberData()">Update</button>
-                        `;
-
-                        toggleLanyardImage();
-                        toggleSpecifyOccupation();
+                        alert(data.error);
+                        return;
                     }
-                })
-                .catch(error => console.error("Error fetching data:", error));
+
+                    document.getElementById("formSection").style.display = "block";
+                    document.getElementById("title").value = data.title;
+                    document.getElementById("firstName").value = data.firstName;
+                    document.getElementById("lastName").value = data.lastName;
+                    document.getElementById("teamNumber").value = data.teamNumber;
+                    document.getElementById("callingNo").value = data.callingNo;
+                    document.getElementById("whatsappNo").value = data.whatsappNo;
+                    document.getElementById("dob").value = data.dob;
+                    document.getElementById("age").value = data.age;
+                    document.getElementById("address1").value = data.address1;
+                    document.getElementById("address2").value = data.address2;
+                    document.getElementById("city").value = data.city;
+                    document.getElementById("country").value = data.country;
+                    document.getElementById("hifzStatus").value = data.hifzStatus;
+                    document.getElementById("qualification").value = data.qualification;
+                    document.getElementById("otherSanstha").value = data.otherSanstha;
+                    document.getElementById("attendingSabaq").value = data.attendingSabaq;
+                    document.getElementById("skills").value = data.skills;
+                    document.getElementById("hobbies").value = data.hobbies;
+                    document.getElementById("profilePicture").value = data.profilePicture;
+                    document.getElementById("profilePreview").src = data.profilePicture;
+                });
         }
 
-        function toggleLanyardImage() {
-            const lanyard = document.getElementById("lanyard").value;
-            document.getElementById("lanyardImageDiv").style.display = lanyard === "No" ? "block" : "none";
-        }
+        function updateMember() {
+            const formData = {};
+            document.querySelectorAll("input, select, textarea").forEach(input => {
+                formData[input.id] = input.value;
+            });
 
-        function toggleSpecifyOccupation() {
-            const occupation = document.getElementById("occupation").value;
-            document.getElementById("specifyOccupationDiv").style.display = occupation === "Other" ? "block" : "none";
-        }
-
-        function updateMemberData() {
-            alert("Update Successful!");
+            fetch(scriptURL, {
+                method: "POST",
+                body: JSON.stringify(formData),
+                headers: { "Content-Type": "application/json" }
+            }).then(response => response.json())
+              .then(data => alert(data.success || data.error));
         }
     </script>
 </body>
