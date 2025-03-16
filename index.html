@@ -3,206 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Data Update</title>
+    <title>Member Lookup & Update</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 600px;
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        label {
-            font-weight: bold;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            background: #28a745;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #218838;
-        }
-        img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            margin-top: 10px;
-            border-radius: 5px;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 15px; background: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background: #218838; }
+        .success { color: green; }
+        .error { color: red; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Update Member Details</h2>
-        <label for="itsno">ITS No. (Required)</label>
-        <input type="text" id="itsno" required>
-        <button onclick="fetchMemberData()">Fetch Data</button>
-
-        <div id="formSection" style="display:none;">
-            <label for="title">Title</label>
-            <select id="title">
-                <option value="Mr">Mr</option>
-                <option value="Mrs">Mrs</option>
-                <option value="Miss">Miss</option>
-            </select>
-
-            <label for="firstName">First Name</label>
-            <input type="text" id="firstName">
-
-            <label for="lastName">Last Name</label>
-            <input type="text" id="lastName">
-
-            <label for="teamNumber">Team No.</label>
-            <input type="text" id="teamNumber">
-
-            <label for="callingNo">Calling No.</label>
-            <input type="text" id="callingNo">
-
-            <label for="whatsappNo">WhatsApp No.</label>
-            <input type="text" id="whatsappNo">
-
-            <label for="dob">Date of Birth</label>
-            <input type="date" id="dob">
-
-            <label for="age">Age</label>
-            <input type="text" id="age">
-
-            <label for="address1">Address Line 1</label>
-            <input type="text" id="address1">
-
-            <label for="address2">Address Line 2</label>
-            <input type="text" id="address2">
-
-            <label for="city">City</label>
-            <input type="text" id="city">
-
-            <label for="country">Country</label>
-            <input type="text" id="country">
-
-            <label for="hifzStatus">Hifz Status</label>
-            <select id="hifzStatus">
-                <option value="Hafiz">Hafiz</option>
-                <option value="Not Hafiz">Not Hafiz</option>
-            </select>
-
-            <label for="qualification">Qualification</label>
-            <input type="text" id="qualification">
-
-            <label for="otherSanstha">Other Sanstha</label>
-            <input type="text" id="otherSanstha">
-
-            <label for="attendingSabaq">Attending Sabaq</label>
-            <select id="attendingSabaq">
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-            </select>
-
-            <label for="skills">Skills</label>
-            <textarea id="skills"></textarea>
-
-            <label for="hobbies">Hobbies</label>
-            <textarea id="hobbies"></textarea>
-
-            <label for="jacket">Jacket</label>
-            <input type="text" id="jacket">
-
-            <label for="lanyard">Lanyard</label>
-            <input type="text" id="lanyard">
-
-            <label for="lanyardImage">Lanyard Image</label>
-            <input type="text" id="lanyardImage">
-
-            <label for="balighStatus">Baligh Status</label>
-            <input type="text" id="balighStatus">
-
-            <label for="sports">Sports</label>
-            <input type="text" id="sports">
-
-            <label for="occupation">Occupation</label>
-            <input type="text" id="occupation">
-
-            <label for="specifyOccupation">Specify Occupation</label>
-            <input type="text" id="specifyOccupation">
-
-            <label for="profilePicture">Profile Picture</label>
-            <input type="text" id="profilePicture">
-            <img id="profilePreview" src="" alt="Profile Picture">
-
-            <button onclick="updateMember()">Update Member</button>
-        </div>
+        <h2>Member Lookup & Update</h2>
+        <input type="text" id="memberId" placeholder="Enter ITS No.">
+        <button onclick="fetchMemberData()">Search</button>
+        <div id="result"></div>
     </div>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbz7Pr33ClhJYpzMuqNTG8yQbwhxMN3sncrPHCDJHWHFjAA081saKv1-n-kZJCEpXgcrSQ/exec";
+        let currentMemberData = {};
 
         function fetchMemberData() {
-            const itsNo = document.getElementById("itsno").value.trim();
-            if (!itsNo) {
-                alert("Please enter ITS No.");
+            const memberId = document.getElementById("memberId").value.trim();
+            if (!memberId) {
+                alert("Please enter a valid ITS No.");
                 return;
             }
 
-            fetch(`${scriptURL}?id=${itsNo}`)
+            fetch("YOUR_SCRIPT_URL_HERE?id=" + memberId)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
-                        alert(data.error);
-                        return;
+                        document.getElementById("result").innerHTML = `<p class="error">${data.error}</p>`;
+                    } else {
+                        currentMemberData = data;
+                        document.getElementById("result").innerHTML = `
+                            <label>First Name:</label><input type="text" id="firstName" value="${data.firstName}">
+                            <label>Last Name:</label><input type="text" id="lastName" value="${data.lastName}">
+                            <label>City:</label><input type="text" id="city" value="${data.city}">
+                            <button onclick="updateMemberData()">Update</button>
+                        `;
                     }
-
-                    document.getElementById("formSection").style.display = "block";
-                    document.getElementById("title").value = data.title;
-                    document.getElementById("firstName").value = data.firstName;
-                    document.getElementById("lastName").value = data.lastName;
-                    document.getElementById("teamNumber").value = data.teamNumber;
-                    document.getElementById("callingNo").value = data.callingNo;
-                    document.getElementById("whatsappNo").value = data.whatsappNo;
-                    document.getElementById("dob").value = data.dob;
-                    document.getElementById("age").value = data.age;
-                    document.getElementById("address1").value = data.address1;
-                    document.getElementById("address2").value = data.address2;
-                    document.getElementById("city").value = data.city;
-                    document.getElementById("country").value = data.country;
-                    document.getElementById("hifzStatus").value = data.hifzStatus;
-                    document.getElementById("qualification").value = data.qualification;
-                    document.getElementById("otherSanstha").value = data.otherSanstha;
-                    document.getElementById("attendingSabaq").value = data.attendingSabaq;
-                    document.getElementById("skills").value = data.skills;
-                    document.getElementById("hobbies").value = data.hobbies;
-                    document.getElementById("profilePicture").value = data.profilePicture;
-                    document.getElementById("profilePreview").src = data.profilePicture;
                 });
         }
 
-        function updateMember() {
-            const formData = {};
-            document.querySelectorAll("input, select, textarea").forEach(input => {
-                formData[input.id] = input.value;
-            });
+        function updateMemberData() {
+            const updatedData = {
+                itsno: currentMemberData.itsno,
+                firstName: document.getElementById("firstName").value,
+                lastName: document.getElementById("lastName").value,
+                city: document.getElementById("city").value
+            };
 
-            fetch(scriptURL, {
+            fetch("https://script.google.com/macros/s/AKfycbxxNBTdTMJe-56kgLR4LacDMM2mc2uR90aQPss8EAaWVa4kW46kT2Sq6XkzqaYtEiZFbg/exec", {
                 method: "POST",
-                body: JSON.stringify(formData),
-                headers: { "Content-Type": "application/json" }
-            }).then(response => response.json())
-              .then(data => alert(data.success || data.error));
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedData),
+                mode: "no-cors"
+            }).then(() => fetchMemberData());
         }
     </script>
 </body>
