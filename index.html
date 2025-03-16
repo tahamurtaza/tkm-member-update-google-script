@@ -40,9 +40,17 @@
                     } else {
                         currentMemberData = data;
                         document.getElementById("result").innerHTML = `
+                            <label>Title:</label><input type="text" id="title" value="${data.title}">
                             <label>First Name:</label><input type="text" id="firstName" value="${data.firstName}">
                             <label>Last Name:</label><input type="text" id="lastName" value="${data.lastName}">
+                            <label>Team No.:</label><input type="text" id="teamNumber" value="${data.teamNumber}">
+                            <label>Calling No.:</label><input type="text" id="callingNumber" value="${data.callingNumber}">
+                            <label>Age:</label><input type="text" id="age" value="${data.age}">
                             <label>City:</label><input type="text" id="city" value="${data.city}">
+                            <label>Country:</label><input type="text" id="country" value="${data.country}">
+                            <label>Hifz Status:</label><input type="text" id="hifzStatus" value="${data.hifzStatus}">
+                            <label>Skills:</label><textarea id="skills">${data.skills}</textarea>
+                            <label>Hobbies:</label><textarea id="hobbies">${data.hobbies}</textarea>
                             <button onclick="updateMemberData()">Update</button>
                         `;
                     }
@@ -52,9 +60,17 @@
         function updateMemberData() {
             const updatedData = {
                 itsno: currentMemberData.itsno,
+                title: document.getElementById("title").value,
                 firstName: document.getElementById("firstName").value,
                 lastName: document.getElementById("lastName").value,
-                city: document.getElementById("city").value
+                teamNumber: document.getElementById("teamNumber").value,
+                callingNumber: document.getElementById("callingNumber").value,
+                age: document.getElementById("age").value,
+                city: document.getElementById("city").value,
+                country: document.getElementById("country").value,
+                hifzStatus: document.getElementById("hifzStatus").value,
+                skills: document.getElementById("skills").value,
+                hobbies: document.getElementById("hobbies").value
             };
 
             fetch("https://script.google.com/macros/s/AKfycbymzXgZy33wBYqLBvS0OJPC0ClapmGLvhNJ1AtZT6JpUm2ZoWCgxrYnGwgdFBMPX-3MEw/exec", {
