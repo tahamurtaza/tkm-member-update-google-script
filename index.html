@@ -32,7 +32,7 @@
                 return;
             }
 
-            fetch("YOUR_SCRIPT_URL_HERE?id=" + memberId)
+            fetch("https://script.google.com/macros/s/AKfycbymzXgZy33wBYqLBvS0OJPC0ClapmGLvhNJ1AtZT6JpUm2ZoWCgxrYnGwgdFBMPX-3MEw/exec?id=" + memberId)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
@@ -57,7 +57,7 @@
                 city: document.getElementById("city").value
             };
 
-            fetch("YOUR_SCRIPT_URL_HERE", {
+            fetch("https://script.google.com/macros/s/AKfycbymzXgZy33wBYqLBvS0OJPC0ClapmGLvhNJ1AtZT6JpUm2ZoWCgxrYnGwgdFBMPX-3MEw/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedData),
