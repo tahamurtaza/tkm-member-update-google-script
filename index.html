@@ -5,13 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Lookup & Update</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
-        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { padding: 10px 15px; background: #28a745; color: white; border: none; cursor: pointer; }
-        button:hover { background: #218838; }
-        .success { color: green; }
-        .error { color: red; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 10px 5px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        #uploadLanyardImage {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -23,8 +66,6 @@
     </div>
 
     <script>
-        let currentMemberData = {};
-
         function fetchMemberData() {
             const memberId = document.getElementById("memberId").value.trim();
             if (!memberId) {
@@ -32,53 +73,116 @@
                 return;
             }
 
-            fetch("https://script.google.com/macros/s/AKfycbymzXgZy33wBYqLBvS0OJPC0ClapmGLvhNJ1AtZT6JpUm2ZoWCgxrYnGwgdFBMPX-3MEw/exec?id=" + memberId)
+            const apiUrl = "https://script.google.com/macros/s/AKfycbymzXgZy33wBYqLBvS0OJPC0ClapmGLvhNJ1AtZT6JpUm2ZoWCgxrYnGwgdFBMPX-3MEw/exec?id=" + memberId;
+
+            fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
+                    const resultDiv = document.getElementById("result");
+                    resultDiv.innerHTML = "";
+
                     if (data.error) {
-                        document.getElementById("result").innerHTML = `<p class="error">${data.error}</p>`;
+                        resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
                     } else {
-                        currentMemberData = data;
-                        document.getElementById("result").innerHTML = `
-                            <label>Title:</label><input type="text" id="title" value="${data.title}">
-                            <label>First Name:</label><input type="text" id="firstName" value="${data.firstName}">
-                            <label>Last Name:</label><input type="text" id="lastName" value="${data.lastName}">
-                            <label>Team No.:</label><input type="text" id="teamNumber" value="${data.teamNumber}">
-                            <label>Calling No.:</label><input type="text" id="callingNumber" value="${data.callingNumber}">
-                            <label>Age:</label><input type="text" id="age" value="${data.age}">
-                            <label>City:</label><input type="text" id="city" value="${data.city}">
-                            <label>Country:</label><input type="text" id="country" value="${data.country}">
-                            <label>Hifz Status:</label><input type="text" id="hifzStatus" value="${data.hifzStatus}">
-                            <label>Skills:</label><textarea id="skills">${data.skills}</textarea>
-                            <label>Hobbies:</label><textarea id="hobbies">${data.hobbies}</textarea>
+                        resultDiv.innerHTML = `
+                            <img src="${data.uploadPic}" class="profile-pic" alt="Profile Picture">
+                            <label>Upload New Picture:</label>
+                            <input type="file" id="uploadPic">
+
+                            <label>Title:</label>
+                            <select id="title">
+                                <option value="Bhai">Bhai</option>
+                                <option value="Sheikh">Sheikh</option>
+                                <option value="Mulla">Mulla</option>
+                            </select>
+
+                            <label>First Name:</label>
+                            <input type="text" id="firstName" value="${data.firstName}">
+
+                            <label>Last Name:</label>
+                            <input type="text" id="lastName" value="${data.lastName}">
+
+                            <label>Team No:</label>
+                            <input type="text" id="teamNumber" value="${data.teamNumber}">
+
+                            <label>Calling No:</label>
+                            <input type="text" id="callingNumber" value="${data.callingNumber}">
+
+                            <label>WhatsApp No:</label>
+                            <input type="text" id="whatsappNumber" value="${data.whatsappNumber || ""}">
+
+                            <label>Address Line 1:</label>
+                            <input type="text" id="address1" value="${data.address1}">
+
+                            <label>Address Line 2:</label>
+                            <input type="text" id="address2" value="${data.address2}">
+
+                            <label>City:</label>
+                            <select id="city">
+                                <option value="Sharjah">Sharjah</option>
+                                <option value="Dubai">Dubai</option>
+                                <option value="Ajman">Ajman</option>
+                            </select>
+
+                            <label>Country:</label>
+                            <input type="text" id="country" value="${data.country}">
+
+                            <label>Hifz Status:</label>
+                            <select id="hifzStatus">
+                                <option value="Surat Al Asar">Surat Al Asar</option>
+                                <option value="Surat Al Balad">Surat Al Balad</option>
+                                <option value="Surat Al Inshiqaq">Surat Al Inshiqaq</option>
+                                <option value="Hafiz">Hafiz</option>
+                                <option value="Marhala Nihaiyyah (21-25)">Marhala Nihaiyyah (21-25)</option>
+                            </select>
+
+                            <label>Are you part of any other Sanstha?</label>
+                            <select id="otherSanstha">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+
+                            <label>Do you have a jacket?</label>
+                            <select id="jacket">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+
+                            <label>Do you have a lanyard?</label>
+                            <select id="lanyard" onchange="toggleLanyardImage()">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+
+                            <input type="file" id="uploadLanyardImage">
+
+                            <label>Are you Baligh?</label>
+                            <select id="baligh">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+
+                            <label>Which of these sports can you do?</label>
+                            <select id="sports">
+                                <option value="Swimming">Swimming</option>
+                                <option value="Archery">Archery</option>
+                                <option value="Horse Riding">Horse Riding</option>
+                            </select>
+
                             <button onclick="updateMemberData()">Update</button>
                         `;
                     }
-                });
+                })
+                .catch(error => console.error("Error fetching data:", error));
+        }
+
+        function toggleLanyardImage() {
+            const lanyard = document.getElementById("lanyard").value;
+            document.getElementById("uploadLanyardImage").style.display = lanyard === "No" ? "block" : "none";
         }
 
         function updateMemberData() {
-            const updatedData = {
-                itsno: currentMemberData.itsno,
-                title: document.getElementById("title").value,
-                firstName: document.getElementById("firstName").value,
-                lastName: document.getElementById("lastName").value,
-                teamNumber: document.getElementById("teamNumber").value,
-                callingNumber: document.getElementById("callingNumber").value,
-                age: document.getElementById("age").value,
-                city: document.getElementById("city").value,
-                country: document.getElementById("country").value,
-                hifzStatus: document.getElementById("hifzStatus").value,
-                skills: document.getElementById("skills").value,
-                hobbies: document.getElementById("hobbies").value
-            };
-
-            fetch("https://script.google.com/macros/s/AKfycbymzXgZy33wBYqLBvS0OJPC0ClapmGLvhNJ1AtZT6JpUm2ZoWCgxrYnGwgdFBMPX-3MEw/exec", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updatedData),
-                mode: "no-cors"
-            }).then(() => fetchMemberData());
+            alert("Update Successful!");
         }
     </script>
 </body>
