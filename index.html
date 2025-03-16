@@ -73,7 +73,7 @@
                 return;
             }
 
-            const apiUrl = "https://script.google.com/macros/s/AKfycbymzXgZy33wBYqLBvS0OJPC0ClapmGLvhNJ1AtZT6JpUm2ZoWCgxrYnGwgdFBMPX-3MEw/exec?id=" + memberId;
+            const apiUrl = "https://script.google.com/macros/s/AKfycbxaBGajAQg4W2sb5vgrekzjmZbPgm_JBTL7FvJCL2GA2DDAyIYVFSH4pEalNtTpLyIDCg/exec?id=" + memberId;
 
             fetch(apiUrl)
                 .then(response => response.json())
@@ -111,6 +111,12 @@
                             <label>WhatsApp No:</label>
                             <input type="text" id="whatsappNumber" value="${data.whatsappNumber || ""}">
 
+                            <label>Date of Birth:</label>
+                            <input type="date" id="dob" value="${data.dob}">
+
+                            <label>Age:</label>
+                            <input type="number" id="age" value="${data.age}">
+
                             <label>Address Line 1:</label>
                             <input type="text" id="address1" value="${data.address1}">
 
@@ -136,11 +142,26 @@
                                 <option value="Marhala Nihaiyyah (21-25)">Marhala Nihaiyyah (21-25)</option>
                             </select>
 
+                            <label>Qualification:</label>
+                            <input type="text" id="qualification" value="${data.qualification}">
+
                             <label>Are you part of any other Sanstha?</label>
                             <select id="otherSanstha">
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                             </select>
+
+                            <label>Attending Sabaq?</label>
+                            <select id="attendingSabak">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+
+                            <label>Skills:</label>
+                            <input type="text" id="skills" value="${data.skills}">
+
+                            <label>Hobbies:</label>
+                            <input type="text" id="hobbies" value="${data.hobbies}">
 
                             <label>Do you have a jacket?</label>
                             <select id="jacket">
@@ -154,7 +175,10 @@
                                 <option value="No">No</option>
                             </select>
 
-                            <input type="file" id="uploadLanyardImage">
+                            <div id="lanyardImageDiv" style="display:none;">
+                                <label>Upload Lanyard Image:</label>
+                                <input type="file" id="uploadLanyardImage">
+                            </div>
 
                             <label>Are you Baligh?</label>
                             <select id="baligh">
@@ -169,8 +193,36 @@
                                 <option value="Horse Riding">Horse Riding</option>
                             </select>
 
+                            <label>What is your occupation?</label>
+                            <select id="occupation" onchange="toggleSpecifyOccupation()">
+                                <option value="Student">Student</option>
+                                <option value="Engineer">Engineer</option>
+                                <option value="Doctor">Doctor</option>
+                                <option value="Business">Business</option>
+                                <option value="Other">Other</option>
+                            </select>
+
+                            <div id="specifyOccupationDiv" style="display:none;">
+                                <label>Specify Occupation:</label>
+                                <input type="text" id="specifyOccupation">
+                            </div>
+
                             <button onclick="updateMemberData()">Update</button>
                         `;
+
+                        // Set values for dropdowns
+                        document.getElementById("title").value = data.title;
+                        document.getElementById("city").value = data.city;
+                        document.getElementById("hifzStatus").value = data.hifzStatus;
+                        document.getElementById("otherSanstha").value = data.otherSanstha;
+                        document.getElementById("jacket").value = data.jacket;
+                        document.getElementById("lanyard").value = data.lanyard;
+                        document.getElementById("baligh").value = data.baligh;
+                        document.getElementById("sports").value = data.sports;
+                        document.getElementById("occupation").value = data.occupation;
+
+                        toggleLanyardImage();
+                        toggleSpecifyOccupation();
                     }
                 })
                 .catch(error => console.error("Error fetching data:", error));
@@ -178,7 +230,12 @@
 
         function toggleLanyardImage() {
             const lanyard = document.getElementById("lanyard").value;
-            document.getElementById("uploadLanyardImage").style.display = lanyard === "No" ? "block" : "none";
+            document.getElementById("lanyardImageDiv").style.display = lanyard === "No" ? "block" : "none";
+        }
+
+        function toggleSpecifyOccupation() {
+            const occupation = document.getElementById("occupation").value;
+            document.getElementById("specifyOccupationDiv").style.display = occupation === "Other" ? "block" : "none";
         }
 
         function updateMemberData() {
