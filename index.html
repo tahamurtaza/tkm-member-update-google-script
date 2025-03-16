@@ -5,58 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Lookup & Update</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 500px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            padding: 10px 15px;
-            margin: 10px 5px;
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #218838;
-        }
-        .profile-pic {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-top: 10px;
-        }
-        .error {
-            color: red;
-        }
-        .success {
-            color: green;
-        }
-        #uploadLanyardImage {
-            display: none;
-        }
-    </style>
-</head>
 <body>
     <div class="container">
         <h2>Member Lookup & Update</h2>
@@ -73,7 +21,7 @@
                 return;
             }
 
-            const apiUrl = "https://script.google.com/macros/s/AKfycbxaBGajAQg4W2sb5vgrekzjmZbPgm_JBTL7FvJCL2GA2DDAyIYVFSH4pEalNtTpLyIDCg/exec?id=" + memberId;
+            const apiUrl = "https://script.google.com/macros/s/AKfycbw5v9iCyLFX3j7gFaz5_bIe5bYgrJqqOiAhvNFKN5MDR-pH4nGnyia87KYcLdTN_YZyRg/exec?id=" + memberId;
 
             fetch(apiUrl)
                 .then(response => response.json())
@@ -85,10 +33,6 @@
                         resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
                     } else {
                         resultDiv.innerHTML = `
-                            <img src="${data.uploadPic}" class="profile-pic" alt="Profile Picture">
-                            <label>Upload New Picture:</label>
-                            <input type="file" id="uploadPic">
-
                             <label>Title:</label>
                             <select id="title">
                                 <option value="Bhai">Bhai</option>
@@ -207,19 +151,12 @@
                                 <input type="text" id="specifyOccupation">
                             </div>
 
+                            <label>Upload Profile Picture:</label>
+                            <input type="file" id="uploadPic">
+                            <img src="${data.uploadPic}" class="profile-pic" alt="Profile Picture">
+
                             <button onclick="updateMemberData()">Update</button>
                         `;
-
-                        // Set values for dropdowns
-                        document.getElementById("title").value = data.title;
-                        document.getElementById("city").value = data.city;
-                        document.getElementById("hifzStatus").value = data.hifzStatus;
-                        document.getElementById("otherSanstha").value = data.otherSanstha;
-                        document.getElementById("jacket").value = data.jacket;
-                        document.getElementById("lanyard").value = data.lanyard;
-                        document.getElementById("baligh").value = data.baligh;
-                        document.getElementById("sports").value = data.sports;
-                        document.getElementById("occupation").value = data.occupation;
 
                         toggleLanyardImage();
                         toggleSpecifyOccupation();
