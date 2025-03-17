@@ -55,18 +55,17 @@
                         document.getElementById("result").innerHTML = `
                             <label>Title:</label>
                             <select id="title">
-                                <option>${data.title}</option>
-                                <option>Bhai</option>
-                                <option>Mulla</option>
-                                <option>Sheikh</option>
+                                <option ${data.title === "Bhai" ? "selected" : ""}>Bhai</option>
+                                <option ${data.title === "Mulla" ? "selected" : ""}>Mulla</option>
+                                <option ${data.title === "Sheikh" ? "selected" : ""}>Sheikh</option>
                             </select>
 
-                            <label>First Name:</label><input type="text" id="firstName" value="${data.firstName}">
-                            <label>Last Name:</label><input type="text" id="lastName" value="${data.lastName}">
-                            <label>Team No.:</label><input type="text" id="teamNumber" value="${data.teamNumber}">
+                            <label>First Name:</label><input type="text" id="firstName" value="${data.firstName}" disabled>
+                            <label>Last Name:</label><input type="text" id="lastName" value="${data.lastName}" disabled>
+                            <label>Team No.:</label><input type="text" id="teamNumber" value="${data.teamNumber}" disabled>
+                            <label>Age:</label><input type="number" id="age" value="${data.age}" disabled>
                             <label>Calling No.:</label><input type="text" id="callingNumber" value="${data.callingNumber}">
                             <label>WhatsApp No.:</label><input type="text" id="whatsappNumber" value="${data.whatsappNumber}">
-                            <label>Age:</label><input type="number" id="age" value="${data.age}">
                             <label>Address:</label><textarea id="address">${data.address}</textarea>
                             <label>City:</label><input type="text" id="city" value="${data.city}">
                             
