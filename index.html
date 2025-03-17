@@ -45,7 +45,7 @@
                 return;
             }
 
-            fetch("https://script.google.com/macros/s/AKfycbwfSLEZHZDZ245N7uoSFkR2AKFuBDMFLVnMHGD7uMjoi3UROQHqaiigPpak9586z9J6Bg/exec?id=" + memberId)
+            fetch("https://script.google.com/macros/s/AKfycbx7hM-vvU56gBP7-nzKTKxkI1o69vEbP6Pjw3qnggfwGOnesh5ewBw7GjdWGC67_T4CXg/exec?id=" + memberId)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
@@ -175,7 +175,7 @@
                 hobbies: document.getElementById("hobbies").value
             };
 
-            fetch("https://script.google.com/macros/s/AKfycbwfSLEZHZDZ245N7uoSFkR2AKFuBDMFLVnMHGD7uMjoi3UROQHqaiigPpak9586z9J6Bg/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbx7hM-vvU56gBP7-nzKTKxkI1o69vEbP6Pjw3qnggfwGOnesh5ewBw7GjdWGC67_T4CXg/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedData),
