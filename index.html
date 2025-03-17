@@ -5,13 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Lookup & Update</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #FFF7E6; }
         .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
-        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { padding: 10px 15px; background: #28a745; color: white; border: none; cursor: pointer; }
-        button:hover { background: #218838; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 15px; background: #A37E2F; color: white; border: none; cursor: pointer;  border-radius: 25px; }
+        button:hover { background: #8f6a1d; }
         .success { color: green; }
         .error { color: red; }
+        
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -21,7 +34,7 @@
         <button onclick="fetchMemberData()">Search</button>
         <div id="result"></div>
     </div>
-
+    <div id="popup" class="popup">Member Updated Successfully!</div>
     <script>
         let currentMemberData = {};
 
@@ -32,7 +45,7 @@
                 return;
             }
 
-            fetch("https://script.google.com/macros/s/AKfycbxxNBTdTMJe-56kgLR4LacDMM2mc2uR90aQPss8EAaWVa4kW46kT2Sq6XkzqaYtEiZFbg/exec?id=" + memberId)
+            fetch("https://script.google.com/macros/s/AKfycbwfSLEZHZDZ245N7uoSFkR2AKFuBDMFLVnMHGD7uMjoi3UROQHqaiigPpak9586z9J6Bg/exec?id=" + memberId)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
@@ -40,9 +53,99 @@
                     } else {
                         currentMemberData = data;
                         document.getElementById("result").innerHTML = `
+                            <label>Title:</label>
+                            <select id="title">
+                                <option>${data.title}</option>
+                                <option>Bhai</option>
+                                <option>Mulla</option>
+                                <option>Sheikh</option>
+                            </select>
+
                             <label>First Name:</label><input type="text" id="firstName" value="${data.firstName}">
                             <label>Last Name:</label><input type="text" id="lastName" value="${data.lastName}">
+                            <label>Team No.:</label><input type="text" id="teamNumber" value="${data.teamNumber}">
+                            <label>Calling No.:</label><input type="text" id="callingNumber" value="${data.callingNumber}">
+                            <label>WhatsApp No.:</label><input type="text" id="whatsappNumber" value="${data.whatsappNumber}">
+                            <label>Age:</label><input type="number" id="age" value="${data.age}">
+                            <label>Address:</label><textarea id="address">${data.address}</textarea>
                             <label>City:</label><input type="text" id="city" value="${data.city}">
+                            
+                            <label>Hifz Status:</label>
+                            <select id="hifzStatus">
+                                <option>${data.hifzStatus}</option>
+                                <option>Surat Al Asar</option>
+                                <option>Surat Al Balad</option>
+                                <option>Surat Al Inshiqaq</option>
+                                <option>Marhala Ula (30)</option>
+                                <option>Marhala Saniyah (28,29)</option>
+                                <option>Marhala Sadlisah (26,27)</option>
+                                <option>Marhala Rabiah (1-5)</option>
+                                <option>Marhala Khamisah (6-10)</option>
+                                <option>Marhala Sadisah (11-15)</option>
+                                <option>Marhala Sabiah (16-20)</option>
+                                <option>Marhala Nihaiyyah (21-25)</option>
+                                <option>Hafiz</option>
+                            </select>
+                            
+                            
+                            <label>Qualification:</label>
+                            <select id="qualification">
+                                <option>${data.qualification}</option>
+                                <option>Student: High school</option>
+                                <option>Student: University</option>
+                                <option>Business Owner</option>
+                                <option>Salaried Professional</option>
+                                <option>Freelancer</option>
+                                <option>Other</option>
+                            </select>
+                            
+                            <label>Other Sanstha:</label>
+                            <select id="otherSanstha">
+                                <option>${data.otherSanstha}</option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                           
+                            
+                            <label>Attending Sabaq:</label>
+                            <select id="attendingSabak">
+                                <option>${data.attendingSabak}</option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+
+                            <label>Jacket:</label>
+                            <select id="jacket">
+                                <option>${data.jacket}</option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+
+                            <label>Lanyard:</label>
+                            <select id="lanyard">
+                                <option>${data.lanyard}</option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+
+                            <label>Baligh Status:</label>
+                            <select id="baligh">
+                                <option>${data.baligh}</option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+
+                            <label>Sports:</label>
+                            <select id="sports">
+                                <option>${data.sports}</option>
+                                <option>Swimming</option>
+                                <option>Horse Riding</option>
+                                <option>Archary</option>
+                            </select>
+                            
+                            <label>Skills:</label><input type="text" id="skills" value="${data.skills}">
+                            <label>Hobbies:</label><input type="text" id="hobbies" value="${data.hobbies}">
+                            
                             <button onclick="updateMemberData()">Update</button>
                         `;
                     }
@@ -52,18 +155,45 @@
         function updateMemberData() {
             const updatedData = {
                 itsno: currentMemberData.itsno,
+                title: document.getElementById("title").value,
                 firstName: document.getElementById("firstName").value,
                 lastName: document.getElementById("lastName").value,
-                city: document.getElementById("city").value
+                teamNumber: document.getElementById("teamNumber").value,
+                callingNumber: document.getElementById("callingNumber").value,
+                whatsappNumber: document.getElementById("whatsappNumber").value,
+                age: document.getElementById("age").value,
+                address: document.getElementById("address").value,
+                city: document.getElementById("city").value,
+                hifzStatus: document.getElementById("hifzStatus").value,
+                qualification: document.getElementById("qualification").value,
+                otherSanstha: document.getElementById("otherSanstha").value,
+                attendingSabak: document.getElementById("attendingSabak").value,
+                jacket: document.getElementById("jacket").value,
+                lanyard: document.getElementById("lanyard").value,
+                baligh: document.getElementById("baligh").value,
+                sports: document.getElementById("sports").value,
+                skills: document.getElementById("skills").value,
+                hobbies: document.getElementById("hobbies").value
             };
 
-            fetch("https://script.google.com/macros/s/AKfycbxxNBTdTMJe-56kgLR4LacDMM2mc2uR90aQPss8EAaWVa4kW46kT2Sq6XkzqaYtEiZFbg/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbwfSLEZHZDZ245N7uoSFkR2AKFuBDMFLVnMHGD7uMjoi3UROQHqaiigPpak9586z9J6Bg/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedData),
                 mode: "no-cors"
-            }).then(() => fetchMemberData());
+            }).then(() => {
+                showPopup();
+                fetchMemberData();
+        });
         }
+        
+        function showPopup() {
+            const popup = document.getElementById("popup");
+            popup.style.display = "block";
+            setTimeout(() => { popup.style.display = "none"; }, 3000);
+        }
+        
+        
     </script>
 </body>
 </html>
