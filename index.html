@@ -13,18 +13,21 @@
         .success { color: green; }
         .error { color: red; }
         
+        /* Popup styles */
         .popup {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #4CAF50;
             color: white;
             padding: 20px;
             border-radius: 10px;
+            font-weight: bold;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
+        .success-popup { background: #4CAF50; } /* Green for success */
+        .error-popup { background: #D9534F; } /* Red for error */
     </style>
 </head>
 <body>
@@ -34,7 +37,10 @@
         <button onclick="fetchMemberData()">Search</button>
         <div id="result"></div>
     </div>
-    <div id="popup" class="popup">Member Updated Successfully!</div>
+    
+        <!-- Popup for success and errors -->
+    <div id="popup" class="popup"></div>
+    
     <script>
         let currentMemberData = {};
 
@@ -45,11 +51,11 @@
                 return;
             }
 
-            fetch("https://script.google.com/macros/s/AKfycbx7hM-vvU56gBP7-nzKTKxkI1o69vEbP6Pjw3qnggfwGOnesh5ewBw7GjdWGC67_T4CXg/exec?id=" + memberId)
+            fetch("https://script.google.com/macros/s/AKfycbwasHj8fgLaAYTH2_qWSDTb7Z6iH4nitQ_A4OYGcvZN3c62tJQ9RSdxV7Vw2dkSFdSTbQ/exec?id=" + memberId)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
-                        document.getElementById("result").innerHTML = `<p class="error">${data.error}</p>`;
+                        showPopup(data.error, "error");
                     } else {
                         currentMemberData = data;
                         document.getElementById("result").innerHTML = `
@@ -63,7 +69,6 @@
                             <label>First Name:</label><input type="text" id="firstName" value="${data.firstName}" disabled>
                             <label>Last Name:</label><input type="text" id="lastName" value="${data.lastName}" disabled>
                             <label>Team No.:</label><input type="text" id="teamNumber" value="${data.teamNumber}" disabled>
-                            <label>Age:</label><input type="number" id="age" value="${data.age}" disabled>
                             <label>Calling No.:</label><input type="text" id="callingNumber" value="${data.callingNumber}">
                             <label>WhatsApp No.:</label><input type="text" id="whatsappNumber" value="${data.whatsappNumber}">
                             <label>Address:</label><textarea id="address">${data.address}</textarea>
@@ -101,16 +106,28 @@
                             <label>Other Sanstha:</label>
                             <select id="otherSanstha">
                                 <option>${data.otherSanstha}</option>
-                                <option>Yes</option>
                                 <option>No</option>
+                                <option disabled>-- If Yes:- --</option>
+                                <option>Shabab Ul Eidiz Zahabi</option>
+                                <option>Burhani Guards</option>
+                                <option>Faiz Ul Mawaid Al Burhaniyah</option>
+                                <option>Nazafat</option>
+                                <option>Transport</option>
+                                <option>Dana Committee</option>
+                                <option>IT AVR</option>
+                                <option>Tazyeen</option>
+
                             </select>
                            
                             
                             <label>Attending Sabaq:</label>
                             <select id="attendingSabak">
                                 <option>${data.attendingSabak}</option>
-                                <option>Yes</option>
                                 <option>No</option>
+                                <option disabled>-- If Yes:- --</option>
+                                <option>Zahir</option>
+                                <option>Taweel</option>
+                                <option>Hakikat</option>
                             </select>
 
                             <label>Jacket:</label>
@@ -140,6 +157,9 @@
                                 <option>Swimming</option>
                                 <option>Horse Riding</option>
                                 <option>Archary</option>
+                                <option>Football</option>
+                                <option>Cricket</option>
+                                <option>Archary</option>
                             </select>
                             
                             <label>Skills:</label><input type="text" id="skills" value="${data.skills}">
@@ -155,18 +175,18 @@
         
         const requiredFields = [
         "title", "firstName", "lastName", "teamNumber", "callingNumber",
-        "whatsappNumber", "age", "address", "city", "hifzStatus",
+        "whatsappNumber", "address", "city", "hifzStatus",
         "qualification", "otherSanstha", "attendingSabak", "jacket",
         "lanyard", "baligh", "sports", "skills", "hobbies"
     ];
 
-    for (const field of requiredFields) {
-        const value = document.getElementById(field)?.value.trim();
-        if (!value) {
-            alert(`Please fill in the required field: ${field.replace(/([A-Z])/g, ' $1').trim()}`);
-            return;
-        }
-    }
+            for (const field of requiredFields) {
+                const value = document.getElementById(field)?.value.trim();
+                if (!value) {
+                    showPopup(`Please fill in the required field: ${formatFieldName(field)}`, "error");
+                    return;
+                }
+            }
         
             const updatedData = {
                 itsno: currentMemberData.itsno,
@@ -176,7 +196,6 @@
                 teamNumber: document.getElementById("teamNumber").value,
                 callingNumber: document.getElementById("callingNumber").value,
                 whatsappNumber: document.getElementById("whatsappNumber").value,
-                age: document.getElementById("age").value,
                 address: document.getElementById("address").value,
                 city: document.getElementById("city").value,
                 hifzStatus: document.getElementById("hifzStatus").value,
@@ -191,27 +210,28 @@
                 hobbies: document.getElementById("hobbies").value
             };
 
-            fetch("https://script.google.com/macros/s/AKfycbx7hM-vvU56gBP7-nzKTKxkI1o69vEbP6Pjw3qnggfwGOnesh5ewBw7GjdWGC67_T4CXg/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbwasHj8fgLaAYTH2_qWSDTb7Z6iH4nitQ_A4OYGcvZN3c62tJQ9RSdxV7Vw2dkSFdSTbQ/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedData),
                 mode: "no-cors"
             }).then(() => {
-                showPopup();
+                showPopup("Member Updated Successfully!", "success");
                 fetchMemberData();
-        });
+            });
         }
-        
-        function showPopup() {
+
+        function showPopup(message, type) {
             const popup = document.getElementById("popup");
+            popup.innerText = message;
             popup.style.display = "block";
+            popup.className = `popup ${type === "success" ? "success-popup" : "error-popup"}`;
             setTimeout(() => { popup.style.display = "none"; }, 3000);
         }
-        
-        // Function to show error popup specifically
-function showErrorPopup(message) {
-    showPopup(message, "error");
-}
+
+        function formatFieldName(field) {
+            return field.replace(/([A-Z])/g, ' $1').trim();
+        }
     </script>
 </body>
 </html>
