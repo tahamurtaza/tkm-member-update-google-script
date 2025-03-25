@@ -28,6 +28,35 @@
         }
         .success-popup { background: #4CAF50; } /* Green for success */
         .error-popup { background: #D9534F; } /* Red for error */
+
+                /* Skills section styling */
+                #skills {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: start;
+        }
+
+        #sports {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: start;
+        }
+
+        #skills label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+
+        #sports label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -51,7 +80,7 @@
                 return;
             }
 
-            fetch("https://script.google.com/macros/s/AKfycbwasHj8fgLaAYTH2_qWSDTb7Z6iH4nitQ_A4OYGcvZN3c62tJQ9RSdxV7Vw2dkSFdSTbQ/exec?id=" + memberId)
+            fetch("https://script.google.com/macros/s/AKfycbzY24yGJZRfRhqnjgrxDT5wAHp9YNLsDzzKH2AvRMTZW0hnbB2l7OtICLFfpNeovh8Liw/exec?id=" + memberId)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
@@ -72,8 +101,8 @@
                             <label>Calling No.:</label><input type="text" id="callingNumber" value="${data.callingNumber}">
                             <label>WhatsApp No.:</label><input type="text" id="whatsappNumber" value="${data.whatsappNumber}">
                             <label>Address:</label><textarea id="address">${data.address}</textarea>
-                            <label>City:</label><input type="text" id="city" value="${data.city}">
-                            
+                            <label>Current City Residing:</label><input type="text" id="city" value="${data.city}">
+                            <label>Country</label><input type="text" id="country" value="${data.country}">
                             <label>Hifz Status:</label>
                             <select id="hifzStatus">
                                 <option>${data.hifzStatus}</option>
@@ -152,17 +181,52 @@
                             </select>
 
                             <label>Sports:</label>
-                            <select id="sports">
-                                <option>${data.sports}</option>
-                                <option>Swimming</option>
-                                <option>Horse Riding</option>
-                                <option>Archary</option>
-                                <option>Football</option>
-                                <option>Cricket</option>
-                                <option>Archary</option>
-                            </select>
-                            
-                            <label>Skills:</label><input type="text" id="skills" value="${data.skills}">
+                            <div id="sports">
+                                <label><input type="checkbox" value="Swimming" ${data.sports.includes("Swimming") ? "checked" : ""}> Swimming</label>
+                                <label><input type="checkbox" value="Horse Riding" ${data.sports.includes("Horse Riding") ? "checked" : ""}> Horse Riding</label>
+                                <label><input type="checkbox" value="Archery" ${data.sports.includes("Archery") ? "checked" : ""}> Archery</label>
+                                <label><input type="checkbox" value="Football" ${data.sports.includes("Football") ? "checked" : ""}> Football</label>
+                                <label><input type="checkbox" value="Cricket" ${data.sports.includes("Cricket") ? "checked" : ""}> Cricket</label>
+                                <label><input type="checkbox" value="Basketball" ${data.sports.includes("Basketball") ? "checked" : ""}> Basketball</label>
+                                <label><input type="checkbox" value="Tennis" ${data.sports.includes("Tennis") ? "checked" : ""}> Tennis</label>
+                                <label><input type="checkbox" value="Handball" ${data.sports.includes("Handball") ? "checked" : ""}> Handball</label>
+                                <label><input type="checkbox" value="Table Tennis" ${data.sports.includes("Table Tennis") ? "checked" : ""}> Table Tennis</label>
+                                <label><input type="checkbox" value="Badminton" ${data.sports.includes("Badminton") ? "checked" : ""}> Badminton</label>
+                                <label><input type="checkbox" value="Foosball" ${data.sports.includes("Foosball") ? "checked" : ""}> Foosball</label>
+                                <label><input type="checkbox" value="Billiards & Snooker" ${data.sports.includes("Billiards & Snooker") ? "checked" : ""}> Billiards & Snooker</label>
+                            </div>
+                            <br>
+                            <label>Skills:</label>
+                            <br>
+                            <div id="skills">
+                                <label><input type="checkbox" value="Communication" ${data.skills.includes("Communication") ? "checked" : ""}> Communication</label>
+<label><input type="checkbox" value="Leadership" ${data.skills.includes("Leadership") ? "checked" : ""}> Leadership</label>
+<label><input type="checkbox" value="Collaboration" ${data.skills.includes("Collaboration") ? "checked" : ""}> Collaboration</label>
+<label><input type="checkbox" value="Decision-Making" ${data.skills.includes("Decision-Making") ? "checked" : ""}> Decision-Making</label>
+<label><input type="checkbox" value="Conflict Resolution" ${data.skills.includes("Conflict Resolution") ? "checked" : ""}> Conflict Resolution</label>
+<label><input type="checkbox" value="Public Speaking" ${data.skills.includes("Public Speaking") ? "checked" : ""}> Public Speaking</label>
+<label><input type="checkbox" value="Problem-Solving" ${data.skills.includes("Problem-Solving") ? "checked" : ""}> Problem-Solving</label>
+<label><input type="checkbox" value="Adaptability" ${data.skills.includes("Adaptability") ? "checked" : ""}> Adaptability</label>
+<label><input type="checkbox" value="Creativity" ${data.skills.includes("Creativity") ? "checked" : ""}> Creativity</label>
+<label><input type="checkbox" value="Time Management" ${data.skills.includes("Time Management") ? "checked" : ""}> Time Management</label>
+<label><input type="checkbox" value="Emotional Intelligence" ${data.skills.includes("Emotional Intelligence") ? "checked" : ""}> Emotional Intelligence</label>
+<label><input type="checkbox" value="Team Motivation" ${data.skills.includes("Team Motivation") ? "checked" : ""}> Team Motivation</label>
+<label><input type="checkbox" value="Negotiation" ${data.skills.includes("Negotiation") ? "checked" : ""}> Negotiation</label>
+<label><input type="checkbox" value="Active Listening" ${data.skills.includes("Active Listening") ? "checked" : ""}> Active Listening</label>
+<label><input type="checkbox" value="Crisis Management" ${data.skills.includes("Crisis Management") ? "checked" : ""}> Crisis Management</label>
+<label><input type="checkbox" value="Event Planning" ${data.skills.includes("Event Planning") ? "checked" : ""}> Event Planning</label>
+<label><input type="checkbox" value="Budgeting & Fundraising" ${data.skills.includes("Budgeting & Fundraising") ? "checked" : ""}> Budgeting & Fundraising</label>
+<label><input type="checkbox" value="Sports Rules & Officiating" ${data.skills.includes("Sports Rules & Officiating") ? "checked" : ""}> Sports Rules & Officiating</label>
+<label><input type="checkbox" value="Basic First Aid" ${data.skills.includes("Basic First Aid") ? "checked" : ""}> Basic First Aid</label>
+<label><input type="checkbox" value="Marketing & Promotion" ${data.skills.includes("Marketing & Promotion") ? "checked" : ""}> Marketing & Promotion</label>
+<label><input type="checkbox" value="Photography & Videography" ${data.skills.includes("Photography & Videography") ? "checked" : ""}> Photography & Videography</label>
+<label><input type="checkbox" value="Tech Skills" ${data.skills.includes("Tech Skills") ? "checked" : ""}> Tech Skills</label>
+<label><input type="checkbox" value="Crowd Management" ${data.skills.includes("Crowd Management") ? "checked" : ""}> Crowd Management</label>
+<label><input type="checkbox" value="Public Relations" ${data.skills.includes("Public Relations") ? "checked" : ""}> Public Relations</label>
+<label><input type="checkbox" value="Sponsorship Outreach" ${data.skills.includes("Sponsorship Outreach") ? "checked" : ""}> Sponsorship Outreach</label>
+
+                            </div>
+
                             <label>Hobbies:</label><input type="text" id="hobbies" value="${data.hobbies}">
                             
                             <button onclick="updateMemberData()">Update</button>
@@ -172,22 +236,33 @@
         }
 
         function updateMemberData() {
+            const selectedSports = Array.from(document.querySelectorAll('#sports input:checked')).map(cb => cb.value);
+            const selectedSkills = Array.from(document.querySelectorAll('#skills input:checked')).map(cb => cb.value);
+        
         
         const requiredFields = [
         "title", "firstName", "lastName", "teamNumber", "callingNumber",
         "whatsappNumber", "address", "city", "hifzStatus",
         "qualification", "otherSanstha", "attendingSabak", "jacket",
-        "lanyard", "baligh", "sports", "skills", "hobbies"
+        "lanyard", "baligh", "skills", "hobbies"
     ];
 
             for (const field of requiredFields) {
-                const value = document.getElementById(field)?.value.trim();
+                
+                
+
+                // Skip fetching value from field reference for skills as it's stored in selectedskills
+                if(field == "skills") 
+                    value = selectedSkills;
+
+                else value = document.getElementById(field)?.value?.trim();
+
                 if (!value) {
                     showPopup(`Please fill in the required field: ${formatFieldName(field)}`, "error");
                     return;
                 }
             }
-        
+
             const updatedData = {
                 itsno: currentMemberData.itsno,
                 title: document.getElementById("title").value,
@@ -198,6 +273,7 @@
                 whatsappNumber: document.getElementById("whatsappNumber").value,
                 address: document.getElementById("address").value,
                 city: document.getElementById("city").value,
+                country: document.getElementById("country").value,
                 hifzStatus: document.getElementById("hifzStatus").value,
                 qualification: document.getElementById("qualification").value,
                 otherSanstha: document.getElementById("otherSanstha").value,
@@ -205,12 +281,12 @@
                 jacket: document.getElementById("jacket").value,
                 lanyard: document.getElementById("lanyard").value,
                 baligh: document.getElementById("baligh").value,
-                sports: document.getElementById("sports").value,
-                skills: document.getElementById("skills").value,
+                sports: selectedSports.join(", "),
+                skills: selectedSkills.join(", "),
                 hobbies: document.getElementById("hobbies").value
             };
 
-            fetch("https://script.google.com/macros/s/AKfycbwasHj8fgLaAYTH2_qWSDTb7Z6iH4nitQ_A4OYGcvZN3c62tJQ9RSdxV7Vw2dkSFdSTbQ/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbzY24yGJZRfRhqnjgrxDT5wAHp9YNLsDzzKH2AvRMTZW0hnbB2l7OtICLFfpNeovh8Liw/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedData),
