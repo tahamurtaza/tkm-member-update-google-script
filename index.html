@@ -227,7 +227,6 @@
 
                             </div>
 
-                            <label>Hobbies:</label><input type="text" id="hobbies" value="${data.hobbies}">
                             
                             <button onclick="updateMemberData()">Update</button>
                         `;
@@ -244,7 +243,7 @@
         "title", "firstName", "lastName", "teamNumber", "callingNumber",
         "whatsappNumber", "address", "city", "hifzStatus",
         "qualification", "otherSanstha", "attendingSabak", "jacket",
-        "lanyard", "baligh", "skills", "hobbies"
+        "lanyard", "baligh", "skills"
     ];
 
             for (const field of requiredFields) {
@@ -282,8 +281,7 @@
                 lanyard: document.getElementById("lanyard").value,
                 baligh: document.getElementById("baligh").value,
                 sports: selectedSports.join(", "),
-                skills: selectedSkills.join(", "),
-                hobbies: document.getElementById("hobbies").value
+                skills: selectedSkills.join(", ")
             };
 
             fetch("https://script.google.com/macros/s/AKfycbzY24yGJZRfRhqnjgrxDT5wAHp9YNLsDzzKH2AvRMTZW0hnbB2l7OtICLFfpNeovh8Liw/exec", {
