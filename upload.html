@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FilePond with Cloudinary (Vanilla JS)</title>
+  <!-- FilePond CSS -->
+    <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+    <!-- Optional: FilePond Image Preview CSS -->
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet" />
+</head>
+<body>
+  <!-- FilePond input element -->
+  <input type="file" class="filepond" name="filepond" accept="image/*" multiple />
+
+  <!-- Element to display the public URL -->
+  <div id="public-url"></div>
+
+  <!-- FilePond JS and Plugins via CDN -->
+  <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.min.js"></script>
+  <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+  <script src="https://unpkg.com/filepond@^4/dist/filepond.min.js"></script>
+
+  <script>
+    // Register FilePond plugins
+    FilePond.registerPlugin(FilePondPluginFileEncode, FilePondPluginImagePreview);
+
+    // Cloudinary configuration
+    const cloudName = 'dlf856fpj'; // Replace with your Cloudinary cloud name
+    const uploadPreset = 'profile_pics'; // Replace with your unsigned upload preset
+    const apiUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+
+
+    // Create FilePond instance
+    const pond = FilePond.create(document.querySelector('.filepond'), {
+      labelIdle: `Drag & Drop your image or <span class="filepond--label-action">Browse</span>`,
+      acceptedFileTypes: ['image/*'],
+      allowMultiple: true, // Allow multiple file uploads (optional)
+      server: {
+         process: (fieldName, file, metadata, load, error, progress, abort) => {
+            // Create FormData for the upload
+            console.log('Uploading now');
+            const formData = new FormData();
+            formData.append('file', file); // Use 'file' as expected by Cloudinary
+            formData.append('upload_preset', uploadPreset);
+
+            // Set up XMLHttpRequest
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', apiUrl, true);
+
+            // Update progress
+            xhr.upload.onprogress = (e) => {
+                if (e.lengthComputable) {
+                    progress(true, e.loaded, e.total);
+                }
+            };
+
+            // Handle response
+            xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const response = JSON.parse(xhr.responseText);
+                    load(response.public_id); // Return public_id to confirm upload
+                    console.log('Uploaded file URL:', response.secure_url); // Log URL for use
+                } else {
+                    error('Upload failed: ' + xhr.statusText);
+                }
+            };
+
+            // Handle errors
+            xhr.onerror = () => {
+                error('Upload error');
+            };
+
+            // Send request
+            xhr.send(formData); 
+
+            // Return abort function
+            return {
+                abort: () => {
+                    xhr.abort();
+                }
+            };
+        },
+        revert: (uniqueFileId, load, error) => {
+            // Optional: Delete uploaded file using delete_token
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/delete_by_token`, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    load();
+                } else {
+                    error('Delete failed');
+                }
+            };
+            xhr.send(JSON.stringify({ token: uniqueFileId }));
+        }
+      }
+    });
+  </script>
+</body>
+</html>

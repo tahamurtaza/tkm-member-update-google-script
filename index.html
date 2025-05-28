@@ -12,7 +12,36 @@
         button:hover { background: #8f6a1d; }
         .success { color: green; }
         .error { color: red; }
-        
+          .popup2 {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .overlay2 {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        #picture {
+            width: 250px;
+            height: 250px;
+            margin-top: 20px;
+        }
+        p {
+            color: #D9534F;
+        }
         /* Popup styles */
         .popup {
             display: none;
@@ -105,7 +134,9 @@
     
     <script>
         let currentMemberData = {};
-        
+        var updatedPicture = "";
+        var placeholder = "https://media.istockphoto.com/id/844000412/vector/default-placeholder-man.jpg?s=612x612&w=0&k=20&c=xFgi95ytbJgyLkN0uUDFA5M4p-Q1s25Ye_M5u86evFc=";
+
         function showLoader() {
     document.getElementById("loader").style.display = "block";
 }
@@ -122,10 +153,9 @@ function hideLoader() {
             }
 
      showLoader();         
-          fetch("https://script.google.com/macros/s/AKfycbzY24yGJZRfRhqnjgrxDT5wAHp9YNLsDzzKH2AvRMTZW0hnbB2l7OtICLFfpNeovh8Liw/exec?id=" + memberId)
+          fetch("https://script.google.com/macros/s/AKfycbzLMIIhQoCuF9FztZL1FAW7o8y3FG0uzTZjv_t_eMc7L94TUN6nanJA7qsv70TwhffaqQ/exec?id=" + memberId)
                 .then(response => response.json())
                 .then(data => {
-                
                 hideLoader();
                 
                     if (data.error) {
@@ -227,51 +257,45 @@ function hideLoader() {
                                 <option>No</option>
                             </select>
 
-                            <label>Sports:</label>
-                            <div id="sports">
-                                <label><input type="checkbox" value="Swimming" ${data.sports.includes("Swimming") ? "checked" : ""}> Swimming</label>
-                                <label><input type="checkbox" value="Horse Riding" ${data.sports.includes("Horse Riding") ? "checked" : ""}> Horse Riding</label>
-                                <label><input type="checkbox" value="Archery" ${data.sports.includes("Archery") ? "checked" : ""}> Archery</label>
-                                <label><input type="checkbox" value="Football" ${data.sports.includes("Football") ? "checked" : ""}> Football</label>
-                                <label><input type="checkbox" value="Cricket" ${data.sports.includes("Cricket") ? "checked" : ""}> Cricket</label>
-                                <label><input type="checkbox" value="Basketball" ${data.sports.includes("Basketball") ? "checked" : ""}> Basketball</label>
-                                <label><input type="checkbox" value="Tennis" ${data.sports.includes("Tennis") ? "checked" : ""}> Tennis</label>
-                                <label><input type="checkbox" value="Handball" ${data.sports.includes("Handball") ? "checked" : ""}> Handball</label>
-                                <label><input type="checkbox" value="Table Tennis" ${data.sports.includes("Table Tennis") ? "checked" : ""}> Table Tennis</label>
-                                <label><input type="checkbox" value="Badminton" ${data.sports.includes("Badminton") ? "checked" : ""}> Badminton</label>
-                                <label><input type="checkbox" value="Foosball" ${data.sports.includes("Foosball") ? "checked" : ""}> Foosball</label>
-                                <label><input type="checkbox" value="Billiards & Snooker" ${data.sports.includes("Billiards & Snooker") ? "checked" : ""}> Billiards & Snooker</label>
+
+                            <br>
+                            <label>Eid Al Adha 1446 Safar Khidmat Availability:</label>
+                            <br>
+                            <div id="dates">
+<p><input type="checkbox" value="Tuesday 3rd June" ${data.dates.includes("Tuesday 3rd June") ? "checked" : ""}> Tuesday 3rd June</p>
+<p><input type="checkbox" value="Wednesday 4th June" ${data.dates.includes("Wednesday 4th June") ? "checked" : ""}> Wednesday 4th June</p>
+<p><input type="checkbox" value="Thursday 5th June" ${data.dates.includes("Thursday 5th June") ? "checked" : ""}> Thursday 5th June</p>
+<p><input type="checkbox" value="Friday 6th June" ${data.dates.includes("Friday 6th June") ? "checked" : ""}> Friday 6th June</p>
+<p><input type="checkbox" value="Saturday 7th June" ${data.dates.includes("Saturday 7th June") ? "checked" : ""}> Saturday 7th June</p>
+<p><input type="checkbox" value="Sunday 8th June" ${data.dates.includes("Sunday 8th June") ? "checked" : ""}> Sunday 8th June</p>
+<p><input type="checkbox" value="Monday 9th June" ${data.dates.includes("Monday 9th June") ? "checked" : ""}> Monday 9th June</p>
+
+                            </div>
+
+                            <br>
+                            <label>Profile Picture</label>
+
+                              <div id="profile">
+                                <img id="picture" src="${data.picture || placeholder}"/>
+                                
                             </div>
                             <br>
-                            <label>Skills:</label>
-                            <br>
-                            <div id="skills">
-                                <label><input type="checkbox" value="Communication" ${data.skills.includes("Communication") ? "checked" : ""}> Communication</label>
-<label><input type="checkbox" value="Leadership" ${data.skills.includes("Leadership") ? "checked" : ""}> Leadership</label>
-<label><input type="checkbox" value="Collaboration" ${data.skills.includes("Collaboration") ? "checked" : ""}> Collaboration</label>
-<label><input type="checkbox" value="Decision-Making" ${data.skills.includes("Decision-Making") ? "checked" : ""}> Decision-Making</label>
-<label><input type="checkbox" value="Conflict Resolution" ${data.skills.includes("Conflict Resolution") ? "checked" : ""}> Conflict Resolution</label>
-<label><input type="checkbox" value="Public Speaking" ${data.skills.includes("Public Speaking") ? "checked" : ""}> Public Speaking</label>
-<label><input type="checkbox" value="Problem-Solving" ${data.skills.includes("Problem-Solving") ? "checked" : ""}> Problem-Solving</label>
-<label><input type="checkbox" value="Adaptability" ${data.skills.includes("Adaptability") ? "checked" : ""}> Adaptability</label>
-<label><input type="checkbox" value="Creativity" ${data.skills.includes("Creativity") ? "checked" : ""}> Creativity</label>
-<label><input type="checkbox" value="Time Management" ${data.skills.includes("Time Management") ? "checked" : ""}> Time Management</label>
-<label><input type="checkbox" value="Emotional Intelligence" ${data.skills.includes("Emotional Intelligence") ? "checked" : ""}> Emotional Intelligence</label>
-<label><input type="checkbox" value="Team Motivation" ${data.skills.includes("Team Motivation") ? "checked" : ""}> Team Motivation</label>
-<label><input type="checkbox" value="Negotiation" ${data.skills.includes("Negotiation") ? "checked" : ""}> Negotiation</label>
-<label><input type="checkbox" value="Active Listening" ${data.skills.includes("Active Listening") ? "checked" : ""}> Active Listening</label>
-<label><input type="checkbox" value="Crisis Management" ${data.skills.includes("Crisis Management") ? "checked" : ""}> Crisis Management</label>
-<label><input type="checkbox" value="Event Planning" ${data.skills.includes("Event Planning") ? "checked" : ""}> Event Planning</label>
-<label><input type="checkbox" value="Budgeting & Fundraising" ${data.skills.includes("Budgeting & Fundraising") ? "checked" : ""}> Budgeting & Fundraising</label>
-<label><input type="checkbox" value="Sports Rules & Officiating" ${data.skills.includes("Sports Rules & Officiating") ? "checked" : ""}> Sports Rules & Officiating</label>
-<label><input type="checkbox" value="Basic First Aid" ${data.skills.includes("Basic First Aid") ? "checked" : ""}> Basic First Aid</label>
-<label><input type="checkbox" value="Marketing & Promotion" ${data.skills.includes("Marketing & Promotion") ? "checked" : ""}> Marketing & Promotion</label>
-<label><input type="checkbox" value="Photography & Videography" ${data.skills.includes("Photography & Videography") ? "checked" : ""}> Photography & Videography</label>
-<label><input type="checkbox" value="Tech Skills" ${data.skills.includes("Tech Skills") ? "checked" : ""}> Tech Skills</label>
-<label><input type="checkbox" value="Crowd Management" ${data.skills.includes("Crowd Management") ? "checked" : ""}> Crowd Management</label>
-<label><input type="checkbox" value="Public Relations" ${data.skills.includes("Public Relations") ? "checked" : ""}> Public Relations</label>
-<label><input type="checkbox" value="Sponsorship Outreach" ${data.skills.includes("Sponsorship Outreach") ? "checked" : ""}> Sponsorship Outreach</label>
+                             <button onclick="openUploadPopup()">Upload Picture</button>
+    <div id="overlay2" class="overlay2"></div>
+                             <div id="popup2" class="popup2">
+        <h3>Upload File</h3>
+        <input type="file" id="fileInput">
+        <button onclick="uploadFile()">Upload</button>
+        <button onclick="closePopup()">Close</button>
+        <p id="result"></p>
+    </div>
 
+
+                            <br>
+                              <br>
+                            <label>Mai Toloba Ul Kuliyat il Mumenoon sathe Ziyafat ni Niyat Karu chu</label>
+                            <div id="ziyafat">
+                                <p><input type="checkbox" value="Labaik" ${data.ziyafat.includes("Labaik") ? "checked" : ""}> Labaik</p>
                             </div>
 
                             
@@ -285,13 +309,15 @@ function hideLoader() {
         showLoader();
             const selectedSports = Array.from(document.querySelectorAll('#sports input:checked')).map(cb => cb.value);
             const selectedSkills = Array.from(document.querySelectorAll('#skills input:checked')).map(cb => cb.value);
-        
+            const selectedDates = Array.from(document.querySelectorAll('#dates input:checked')).map(cb => cb.value);
+            const selectedZiyafat = Array.from(document.querySelectorAll('#ziyafat input:checked')).map(cb => cb.value);
+
         
         const requiredFields = [
         "title", "firstName", "lastName", "teamNumber", "callingNumber",
         "whatsappNumber", "address", "city", "hifzStatus",
         "qualification", "otherSanstha", "attendingSabak", "jacket",
-        "lanyard", "baligh", "skills"
+        "lanyard", "baligh", "dates", "ziyafat"
     ];
 
             for (const field of requiredFields) {
@@ -301,7 +327,16 @@ function hideLoader() {
                 // Skip fetching value from field reference for skills as it's stored in selectedskills
                 if(field == "skills") 
                     value = selectedSkills;
-
+                else if(field == "dates") 
+                    value = selectedDates;
+                 else if(field == "ziyafat") 
+                    {
+                        value = selectedZiyafat;
+                        if(value == false) {
+                              showPopup(`Please fill in the required field: ${formatFieldName(field)}`, "error");
+                            return;
+                        }
+                    }
                 else value = document.getElementById(field)?.value?.trim();
 
                 if (!value) {
@@ -329,10 +364,13 @@ function hideLoader() {
                 lanyard: document.getElementById("lanyard").value,
                 baligh: document.getElementById("baligh").value,
                 sports: selectedSports.join(", "),
-                skills: selectedSkills.join(", ")
+                skills: selectedSkills.join(", "),
+                dates: selectedDates.join(", "),
+                ziyafat: selectedZiyafat.join(", "),
+                picture: updatedPicture
             };
 
-            fetch("https://script.google.com/macros/s/AKfycbzY24yGJZRfRhqnjgrxDT5wAHp9YNLsDzzKH2AvRMTZW0hnbB2l7OtICLFfpNeovh8Liw/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbzLMIIhQoCuF9FztZL1FAW7o8y3FG0uzTZjv_t_eMc7L94TUN6nanJA7qsv70TwhffaqQ/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedData),
@@ -354,6 +392,108 @@ function hideLoader() {
         function formatFieldName(field) {
             return field.replace(/([A-Z])/g, ' $1').trim();
         }
+
+           // Store callback for handling the uploaded URL
+        let onUploadComplete = null;
+
+        function openUploadPopup() {
+            return new Promise((resolve) => {
+                const popup = document.getElementById('popup2');
+                const overlay = document.getElementById('overlay2');
+                
+                popup.style.display = 'block';
+                overlay.style.display = 'block';
+                
+                // Store resolve function to return URL later
+                onUploadComplete = (url) => {
+                    resolve(url);
+                    closePopup();
+                };
+            });
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('popup2');
+            const overlay = document.getElementById('overlay2');
+            popup.style.display = 'none';
+            overlay.style.display = 'none';
+            document.getElementById('fileInput').value = '';
+            // document.getElementById('result').textContent = '';
+        }
+
+            // Cloudinary configuration
+    const cloudName = 'dlf856fpj'; // Replace with your Cloudinary cloud name
+    const uploadPreset = 'profile_pics'; // Replace with your unsigned upload preset
+    const apiUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const result = document.getElementById('result');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                result.textContent = 'Please select a file';
+                return;
+            }
+
+            // Simulating file upload (replace with your actual upload API)
+            try {
+          console.log('Uploading now');
+            const formData = new FormData();
+            formData.append('file', file); // Use 'file' as expected by Cloudinary
+            formData.append('upload_preset', uploadPreset);
+
+            // Set up XMLHttpRequest
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', apiUrl, true);
+
+            // // Update progress
+            // xhr.upload.onprogress = (e) => {
+            //     if (e.lengthComputable) {
+            //         progress(true, e.loaded, e.total);
+            //     }
+            // };
+
+            // Handle response
+            xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const response = JSON.parse(xhr.responseText);
+                    if (onUploadComplete) {
+                        onUploadComplete(response.secure_url);
+                    }
+                    console.log('Uploaded file URL:', response.secure_url); // Log URL for use
+                      updatedPicture = response.secure_url;
+                console.log('Uploaded picture: ', updatedPicture);
+                // Update the img element's src attribute
+                const pictureElement = document.getElementById('picture');
+                 console.log('Picture element: ', pictureElement);
+                // Update the img element's src attribute
+                pictureElement.src = response.secure_url;
+                } else {
+                    error('Upload failed: ' + xhr.statusText);
+                }
+            };
+
+            // Handle errors
+            xhr.onerror = () => {
+                error('Upload error');
+            };
+
+            // Send request
+            xhr.send(formData); 
+
+            // Return abort function
+            return {
+                abort: () => {
+                    xhr.abort();
+                }
+            };
+            } catch (error) {
+                result.textContent = 'Error: ' + error.message;
+            }
+        }
+
+    
     </script>
 </body>
 </html>
