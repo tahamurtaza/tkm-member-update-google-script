@@ -306,7 +306,7 @@ function hideLoader() {
         }
 
         function updateMemberData() {
-        showLoader();
+       
             const selectedSports = Array.from(document.querySelectorAll('#sports input:checked')).map(cb => cb.value);
             const selectedSkills = Array.from(document.querySelectorAll('#skills input:checked')).map(cb => cb.value);
             const selectedDates = Array.from(document.querySelectorAll('#dates input:checked')).map(cb => cb.value);
@@ -322,8 +322,12 @@ function hideLoader() {
 
             for (const field of requiredFields) {
                 
+                  if(updatedPicture == false) {
+                              showPopup(`Please upload your latest 2x2 passport size photo`, "error");
+                            return;
+                    }
                 
-
+                
                 // Skip fetching value from field reference for skills as it's stored in selectedskills
                 if(field == "skills") 
                     value = selectedSkills;
@@ -370,6 +374,7 @@ function hideLoader() {
                 picture: updatedPicture
             };
 
+             showLoader();
             fetch("https://script.google.com/macros/s/AKfycbzLMIIhQoCuF9FztZL1FAW7o8y3FG0uzTZjv_t_eMc7L94TUN6nanJA7qsv70TwhffaqQ/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
