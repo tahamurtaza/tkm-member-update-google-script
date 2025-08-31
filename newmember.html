@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Embedded Google Form</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --card: #ffffff;
+      --text: #1f2937;
+      --accent: #205560; /* tweak if you like */
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .wrap {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 900px;
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,.06);
+    }
+    header {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent);
+    }
+    h1 {
+      font-size: 18px;
+      margin: 0;
+      font-weight: 600;
+    }
+    .frame {
+      width: 100%;
+      height: 80vh;      /* Adjust height as needed */
+      border: 0;
+      display: block;
+    }
+    .fallback {
+      padding: 14px 20px;
+      border-top: 1px solid rgba(0,0,0,.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .note {
+      font-size: 14px;
+      opacity: .8;
+    }
+    .btn {
+      appearance: none;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <span class="dot"></span>
+        <h1>Form</h1>
+      </header>
+
+      <!-- Embed your Google Form -->
+      <!-- Tip: If this ever fails to load, open your form > Send > <> Embed and use that iframe src. -->
+      <iframe
+        class="frame"
+        src="https://forms.gle/C42YY6B2aiVXrpE89"
+        allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+
+      <!-- Fallback open-in-new-tab button -->
+      <div class="fallback">
+        <div class="note">If the form doesn’t appear above, open it directly:</div>
+        <a class="btn" href="https://forms.gle/C42YY6B2aiVXrpE89" target="_blank" rel="noopener">Open Form</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
