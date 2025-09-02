@@ -5,33 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Update</title>
     <style>
-        body {
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #eaf3f5, #ffffff);
-      color: #333;
-    }
-        button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 13px 20px;
-      background: #205560;
-      color: white;
-      font-weight: bold;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-      border-radius: 30px;
-      width: 100%;
-      transition: all 0.3s ease;
-    }
-    
-    button:hover {
-      transform: translateY(-2px);
-      background: #163c44;
-      box-shadow: 0 6px 18px rgba(32, 85, 96, 0.4);
-    }
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #FFF7E6; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 15px; background: #A37E2F; color: white; border: none; cursor: pointer;  border-radius: 25px; }
+        button:hover { background: #8f6a1d; }
         .success { color: green; }
         .error { color: red; }
           .popup2 {
@@ -46,17 +24,6 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
         }
-        .container {
-      max-width: 600px;
-      margin: 60px auto;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
-      padding: 30px 40px;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      text-align: left;
-      animation: fadeIn 0.8s ease-in-out;
-    }
         .overlay2 {
             display: none;
             position: fixed;
@@ -67,23 +34,27 @@
             background: rgba(0,0,0,0.5);
             z-index: 999;
         }
-        
+        #picture {
+            width: 250px;
+            height: 250px;
+            margin-top: 20px;
+        }
         p {
             color: #D9534F;
         }
         /* Popup styles */
         .popup {
-      display: none;
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 15px 20px;
-      border-radius: 12px;
-      font-weight: 600;
-      color: white;
-      animation: slideDown 0.5s ease;
-      z-index: 2000;
-    }
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
         .success-popup { background: #4CAF50; } /* Green for success */
         .error-popup { background: #D9534F; } /* Red for error */
 
@@ -117,82 +88,30 @@
         }
         
         #loader {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 9999;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 40px;
-      border-radius: 15px;
-      backdrop-filter: blur(6px);
-      display: none;
-    }
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 30px;
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+}
 
-    select {
-      appearance: none;
-      background: url("data:image/svg+xml;utf8,<svg fill='%23205560' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 12px center/15px auto;
-      cursor: pointer;
-    }
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 5px solid #ccc;
+    border-top: 5px solid #A37E2F;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
 
-    .spinner {
-      width: 45px;
-      height: 45px;
-      border: 5px solid #eee;
-      border-top: 5px solid #205560;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: auto;
-    }
-
-.logo {
-      display: block;
-      margin: 0 auto 20px auto;
-      width: 120px;
-    }
-    
-    label {
-      font-weight: 600;
-      display: block;
-      margin-top: 15px;
-      margin-bottom: 6px;
-      color: #205560;
-    }
-    
-    input, select, textarea {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      outline: none;
-      font-size: 15px;
-      transition: all 0.3s ease;
-    }
-    input:focus, select:focus, textarea:focus {
-      border-color: #205560;
-      box-shadow: 0 0 6px rgba(32, 85, 96, 0.3);
-    }
-    
-    #picture {
-      width: 220px;
-      height: 220px;
-      border-radius: 15px;
-      border: 3px solid #eee;
-      margin-top: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      display: block;
-    }
-    
-    h2 {
-      text-align: center;
-      color: #205560;
-      margin-bottom: 20px;
-      font-size: 24px;
-      letter-spacing: 1px;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-20px);} to { opacity: 1; transform: translateY(0);} }
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
 
 
     </style>
@@ -204,12 +123,11 @@
 </div>
 
     <div class="container">
-        <img src="https://tkmshareqah.com/assets/images/image12.png?v=10037da3" alt="Logo" class="logo">
-    <h2>Toloba Member Data Update</h2>
-    <input type="text" id="memberId" placeholder="Enter ITS No.">
-    <button onclick="fetchMemberData()">Search</button>
-    <div id="result"></div>
-  </div>
+        <h2>UPDATE FORM FOR ADMIN ONLY</h2>
+
+        <input type="text" id="memberId" placeholder="Enter ITS No.">
+        <button onclick="fetchMemberData()">Search</button>
+        <div id="result"></div>
     </div>
     
         <!-- Popup for success and errors -->
@@ -339,9 +257,12 @@ function hideLoader() {
                                 <option>Yes</option>
                                 <option>No</option>
                             </select>
+                            
+                            <label>Sports</label><input type="text" id="sports" value="${data.sports}">
+                            
+                            <label>Skills</label><input type="text" id="skills" value="${data.skills}">
+                          
 
-
-                            <br>
                             <label>Profile Picture</label>
 
                               <div id="profile">
@@ -360,6 +281,7 @@ function hideLoader() {
     </div>
 
 
+                            
 
                             
                             <button onclick="updateMemberData()">Update</button>
