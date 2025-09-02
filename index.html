@@ -385,10 +385,10 @@ function hideLoader() {
 
             for (const field of requiredFields) {
                 
-                //  if(updatedPicture == false) {
-                         //     showPopup(`Please upload your latest 2x2 passport size photo`, "error");
-                        //    return;
-             //       }
+                  if(updatedPicture == false) {
+                              showPopup(`Please upload your latest 2x2 passport size photo`, "error");
+                            return;
+                    }
                 
                 
                 // Skip fetching value from field reference for skills as it's stored in selectedskills
