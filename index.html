@@ -1,512 +1,364 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toloba Data Update</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #eaf3f5, #ffffff);
-      color: #333;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toloba Data Update</title>
+    <style>
+        body { font-family: "Segoe UI", Tahoma, sans-serif; margin: 0; padding: 0; background: linear-gradient(135deg, #eaf3f5, #ffffff); color: #333; }
+        .container { max-width: 600px; margin: 60px auto; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); padding: 30px 40px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); text-align: left; animation: fadeIn 0.8s ease-in-out; }
+        .logo { display: block; margin: 0 auto 20px auto; width: 120px; }
+        h2 { text-align: center; color: #205560; margin-bottom: 20px; font-size: 24px; letter-spacing: 1px; }
+        label { font-weight: 600; display: block; margin-top: 15px; margin-bottom: 6px; color: #205560; }
+        .checkbox-group { margin-bottom: 15px; }
+        .checkbox-group label { display: inline-block; margin-right: 15px; font-weight: normal; color: #333; }
+        .checkbox-group input[type="checkbox"] { width: auto; margin-right: 5px; }
+        input, select, textarea { width: 100%; padding: 12px 14px; border: 1px solid #ccc; border-radius: 12px; outline: none; font-size: 15px; transition: all 0.3s ease; background: #fff; }
+        input:focus, select:focus, textarea:focus { border-color: #205560; box-shadow: 0 0 6px rgba(32, 85, 96, 0.3); }
+        button { display: inline-block; margin-top: 20px; padding: 13px 20px; background: #205560; color: white; font-weight: bold; font-size: 16px; border: none; cursor: pointer; border-radius: 30px; width: 100%; transition: all 0.3s ease; }
+        button:hover { transform: translateY(-2px); background: #163c44; box-shadow: 0 6px 18px rgba(32, 85, 96, 0.4); }
+        #picture { width: 220px; height: 220px; border-radius: 15px; border: 3px solid #eee; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: block; }
+        
+        /* Picture Instructions Styling */
+        .photo-guidelines { margin-top: 25px; margin-bottom: 15px; border: 1px solid #cceeff; border-radius: 12px; background: #f0f8ff; padding: 15px; }
+        .photo-guidelines summary { font-weight: 700; color: #205560; cursor: pointer; list-style: none; padding-bottom: 5px; }
+        .photo-guidelines summary::before { content: "📸 "; margin-right: 8px; }
+        .photo-guidelines ul { margin: 10px 0 0 0; padding-left: 20px; list-style-type: disc; color: #555; font-size: 14px; }
+        .photo-guidelines ul li { margin-bottom: 5px; }
 
-    .container {
-      max-width: 600px;
-      margin: 60px auto;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
-      padding: 30px 40px;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      text-align: left;
-      animation: fadeIn 0.8s ease-in-out;
-    }
-    
-    .logo {
-      display: block;
-      margin: 0 auto 20px auto;
-      width: 120px;
-    }
-
-    h2 {
-      text-align: center;
-      color: #205560;
-      margin-bottom: 20px;
-      font-size: 24px;
-      letter-spacing: 1px;
-    }
-
-    label {
-      font-weight: 600;
-      display: block;
-      margin-top: 15px;
-      margin-bottom: 6px;
-      color: #205560;
-    }
-    
-    .checkbox-group {
-      margin-bottom: 15px;
-    }
-    .checkbox-group label {
-      display: inline-block;
-      margin-right: 15px;
-      font-weight: normal;
-      color: #333;
-    }
-    .checkbox-group input[type="checkbox"] {
-      width: auto;
-      margin-right: 5px;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      outline: none;
-      font-size: 15px;
-      transition: all 0.3s ease;
-      background: #fff;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: #205560;
-      box-shadow: 0 0 6px rgba(32, 85, 96, 0.3);
-    }
-
-    button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 13px 20px;
-      background: #205560;
-      color: white;
-      font-weight: bold;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-      border-radius: 30px;
-      width: 100%;
-      transition: all 0.3s ease;
-    }
-
-    button:hover {
-      transform: translateY(-2px);
-      background: #163c44;
-      box-shadow: 0 6px 18px rgba(32, 85, 96, 0.4);
-    }
-
-    #picture {
-      width: 220px;
-      height: 220px;
-      border-radius: 15px;
-      border: 3px solid #eee;
-      margin-top: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      display: block;
-    }
-
-    /* Popup styling */
-    .popup {
-      display: none;
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 15px 20px;
-      border-radius: 12px;
-      font-weight: 600;
-      color: white;
-      animation: slideDown 0.5s ease;
-      z-index: 2000;
-    }
-
-    .success-popup { background: #4CAF50; }
-    .error-popup { background: #D9534F; }
-
-    /* Upload popup */
-    .popup2 {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      z-index: 1001;
-      width: 300px;
-      text-align: center;
-    }
-
-    .overlay2 {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-    }
-
-    /* Loader */
-    #loader {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 9999;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 40px;
-      border-radius: 15px;
-      backdrop-filter: blur(6px);
-      display: none;
-    }
-    
-    select {
-      appearance: none;
-      background: url("data:image/svg+xml;utf8,<svg fill='%23205560' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 12px center/15px auto;
-      cursor: pointer;
-    }
-
-    .spinner {
-      width: 45px;
-      height: 45px;
-      border: 5px solid #eee;
-      border-top: 5px solid #205560;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: auto;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-20px);} to { opacity: 1; transform: translateY(0);} }
-  </style>
+        /* Popup styling */
+        .popup { display: none; position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 12px; font-weight: 600; color: white; animation: slideDown 0.5s ease; z-index: 2000; }
+        .success-popup { background: #4CAF50; }
+        .error-popup { background: #D9534F; }
+        /* Upload popup */
+        .popup2 { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); z-index: 1001; width: 300px; text-align: center; }
+        .overlay2 { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+        /* Loader */
+        #loader { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 15px; backdrop-filter: blur(6px); display: none; }
+        select { appearance: none; background: url("data:image/svg+xml;utf8,<svg fill='%23205560' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 12px center/15px auto; cursor: pointer; }
+        .spinner { width: 45px; height: 45px; border: 5px solid #eee; border-top: 5px solid #205560; border-radius: 50%; animation: spin 1s linear infinite; margin: auto; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px);} to { opacity: 1; transform: translateY(0);} }
+        .hidden-field { display: none !important; }
+    </style>
 </head>
 <body>
+    <div id="loader"><div class="spinner"></div></div>
+    <div class="container">
+        <img src="https://tkmshareqah.com/assets/images/image12.png?v=10037da3" alt="Logo" class="logo">
+        <h2>Toloba Member Data Update</h2>
+        <input type="text" id="memberId" placeholder="Enter ITS No.">
+        <button onclick="fetchMemberData()">Search</button>
+        <div id="result"></div>
+    </div>
+    <div id="popup" class="popup"></div>
+    <div id="overlay2" class="overlay2"></div>
+    <div id="popup2" class="popup2">
+        <h3 style="margin-bottom:15px;color:#205560;">Upload Profile Picture</h3>
+        <input type="file" id="fileInput" style="margin-bottom:10px;">
+        <button onclick="uploadFile()">Upload</button>
+        <button onclick="closePopup()" style="margin-top:10px;background:#ccc;color:#333;">Cancel</button>
+        <p id="result"></p>
+    </div>
+    <script>
+        let currentMemberData = {};
+        let updatedPicture = "";
+        const placeholder = "https://media.istockphoto.com/id/844000412/vector/default-placeholder-man.jpg?s=612x612&w=0&k=20&c=xFgi95ytbJgyLkN0uUDFA5M4p-Q1s25Ye_M5u86evFc=";
 
-  <div id="loader"><div class="spinner"></div></div>
-
-  <div class="container">
-  <img src="https://tkmshareqah.com/assets/images/image12.png?v=10037da3" alt="Logo" class="logo">
-    <h2>Toloba Member Data Update</h2>
-    <input type="text" id="memberId" placeholder="Enter ITS No.">
-    <button onclick="fetchMemberData()">Search</button>
-    <div id="result"></div>
-  </div>
-
-  <div id="popup" class="popup"></div>
-
-  <div id="overlay2" class="overlay2"></div>
-  <div id="popup2" class="popup2">
-    <h3 style="margin-bottom:15px;color:#205560;">Upload Profile Picture</h3>
-    <input type="file" id="fileInput" style="margin-bottom:10px;">
-    <button onclick="uploadFile()">Upload</button>
-    <button onclick="closePopup()" style="margin-top:10px;background:#ccc;color:#333;">Cancel</button>
-    <p id="result"></p>
-  </div>
-
-  <script>
-    let currentMemberData = {};
-    let updatedPicture = "";
-    const placeholder = "https://media.istockphoto.com/id/844000412/vector/default-placeholder-man.jpg?s=612x612&w=0&k=20&c=xFgi95ytbJgyLkN0uUDFA5M4p-Q1s25Ye_M5u86evFc=";
-
-    function showLoader() { document.getElementById("loader").style.display = "block"; }
-    function hideLoader() { document.getElementById("loader").style.display = "none"; }
-
-    function fetchMemberData() {
-      const memberId = document.getElementById("memberId").value.trim();
-      if (!memberId) {
-        alert("Please enter a valid ITS No.");
-        return;
-      }
-
-      showLoader();
-      fetch("https://script.google.com/macros/s/AKfycbzlTLlbcpn5p19yH3XsaTH99CwYnjvGnpYD53jVIHwtbG8TFOdpj6A5PToCAimM7cdTUQ/exec?id=" + memberId)
-        .then(response => response.json())
-        .then(data => {
-          hideLoader();
-          if (data.error) {
-            showPopup(data.error, "error");
-          } else {
-            currentMemberData = data;
-            updatedPicture = data.picture || "";
-            
-            document.getElementById("result").innerHTML = `
-              <label>Title:</label>
-              <select id="title">
-                <option ${data.title === "Bhai" ? "selected" : ""}>Bhai</option>
-                <option ${data.title === "Mulla" ? "selected" : ""}>Mulla</option>
-                <option ${data.title === "Sheikh" ? "selected" : ""}>Sheikh</option>
-              </select>
-
-              <label>First Name:</label><input type="text" id="firstName" value="${data.firstName}" disabled>
-              <label>Last Name:</label><input type="text" id="lastName" value="${data.lastName}" disabled>
-              <label>Team No.:</label><input type="text" id="teamNumber" value="${data.teamNumber}" disabled>
-              <label>Calling No.:</label><input type="text" id="callingNumber" value="${data.callingNumber}">
-              <label>WhatsApp No.:</label><input type="text" id="whatsappNumber" value="${data.whatsappNumber}">
-              <label>Address:</label><textarea id="address">${data.address}</textarea>
-              <label>Current City Residing:</label><input type="text" id="city" value="${data.city}">
-              <label>Country</label><input type="text" id="country" value="${data.country}">
-
-              <label>Hifz Status:</label>
-              <select id="hifzStatus">
-                <option>${data.hifzStatus}</option>
-                <option>Surat Al Asar</option>
-                <option>Surat Al Balad</option>
-                <option>Surat Al Inshiqaq</option>
-                <option>Marhala Ula (30)</option>
-                <option>Marhala Saniyah (28,29)</option>
-                <option>Marhala Sadlisah (26,27)</option>
-                <option>Marhala Rabiah (1-5)</option>
-                <option>Marhala Khamisah (6-10)</option>
-                <option>Marhala Sadisah (11-15)</option>
-                <option>Marhala Sabiah (16-20)</option>
-                <option>Marhala Nihaiyyah (21-25)</option>
-                <option>Hafiz</option>
-              </select>
-
-              <label>Qualification:</label>
-              <select id="qualification">
-                <option>${data.qualification}</option>
-                <option>Student: High school</option>
-                <option>Student: University</option>
-                <option>Business Owner</option>
-                <option>Salaried Professional</option>
-                <option>Freelancer</option>
-                <option>Other</option>
-              </select>
-
-              <label>Are you a part of any other Sanstha:</label>
-              <select id="otherSanstha">
-                <option>${data.otherSanstha}</option>
-                <option>Not Applicable</option>
-                <option disabled>-- If Yes:- --</option>
-                <option>Shabab Ul Eidiz Zahabi</option>
-                <option>Burhani Guards</option>
-                <option>Faiz Ul Mawaid Al Burhaniyah</option>
-                <option>Nazafat</option>
-                <option>Transport</option>
-                <option>Dana Committee</option>
-                <option>IT AVR</option>
-                <option>Tazyeen</option>
-                <option>Zakereen</option>
-                <option>Attalim Khidmat</option>
-              </select>
-
-              <label>Attending Sabaq:</label>
-              <select id="attendingSabak">
-                <option>${data.attendingSabak}</option>
-                <option>Not Attending</option>
-                <option disabled>-- If Yes:- --</option>
-                <option>Zahir</option>
-                <option>Taweel</option>
-                <option>Hakikat</option>
-              </select>
-
-              <label>Do you have Jacket:</label>
-              <select id="jacket">
-                <option>${data.jacket}</option>
-                <option>Yes</option>
-                <option>No</option>
-              </select>
-
-              <label>Do you have Lanyard:</label>
-              <select id="lanyard">
-                <option>${data.lanyard}</option>
-                <option>Yes</option>
-                <option>No</option>
-              </select>
-
-              <label>Baligh Status:</label>
-              <select id="baligh">
-                <option>${data.baligh}</option>
-                <option>Yes</option>
-                <option>No</option>
-              </select>
-
-              <label>Skills:</label><input type="text" id="skills" value="${data.skills || ''}" placeholder="E.g., IT Support, Cooking, Photography">
-              <label>Sports:</label><input type="text" id="sports" value="${data.sports || ''}" placeholder="E.g., Football, Cricket, Basketball">
-
-              <br>
-              <label>Profile Picture</label>
-
-              <div id="profile">
-                <img id="picture" src="${data.picture || placeholder}"/>
-              </div>
-              <br>
-              <button onclick="openUploadPopup()">Upload Picture</button>
-              <button onclick="updateMemberData()">Update</button>
-            `;
-          }
-        });
-    }
-
-    function updateMemberData() {
-      // Check if there is no current picture and no new picture has been uploaded
-      if (!currentMemberData.picture && !updatedPicture) {
-        showPopup(`Please upload your latest 2x2 passport size photo`, "error");
-        return;
-      }
-      
-      const requiredFields = [
-        "title", "firstName", "lastName", "teamNumber", "callingNumber",
-        "whatsappNumber", "address", "city", "hifzStatus",
-        "qualification", "otherSanstha", "attendingSabak", "jacket",
-        "lanyard", "baligh"
-      ];
-
-      for (const field of requiredFields) {
-        let value = document.getElementById(field)?.value?.trim();
-        if (!value) {
-          showPopup(`Please fill in the required field: ${formatFieldName(field)}`, "error");
-          return;
+        function showLoader() {
+            document.getElementById("loader").style.display = "block";
         }
-      }
 
-      const updatedData = {
-        itsno: currentMemberData.itsno,
-        title: document.getElementById("title").value,
-        firstName: document.getElementById("firstName").value,
-        lastName: document.getElementById("lastName").value,
-        teamNumber: document.getElementById("teamNumber").value,
-        callingNumber: document.getElementById("callingNumber").value,
-        whatsappNumber: document.getElementById("whatsappNumber").value,
-        address: document.getElementById("address").value,
-        city: document.getElementById("city").value,
-        country: document.getElementById("country").value,
-        hifzStatus: document.getElementById("hifzStatus").value,
-        qualification: document.getElementById("qualification").value,
-        otherSanstha: document.getElementById("otherSanstha").value,
-        attendingSabak: document.getElementById("attendingSabak").value,
-        jacket: document.getElementById("jacket").value,
-        lanyard: document.getElementById("lanyard").value,
-        baligh: document.getElementById("baligh").value,
-        sports: document.getElementById("sports").value,
-        skills: document.getElementById("skills").value,
-        picture: updatedPicture || currentMemberData.picture, // Use the new URL, or fall back to the old one
-      };
+        function hideLoader() {
+            document.getElementById("loader").style.display = "none";
+        }
 
-      showLoader();
-      fetch("https://script.google.com/macros/s/AKfycbzlTLlbcpn5p19yH3XsaTH99CwYnjvGnpYD53jVIHwtbG8TFOdpj6A5PToCAimM7cdTUQ/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedData),
-        mode: "no-cors"
-      }).then(() => {
-        showPopup("Member Updated Successfully!", "success");
-        fetchMemberData();
-      });
-    }
-
-    function showPopup(message, type) {
-      const popup = document.getElementById("popup");
-      popup.innerText = message;
-      popup.style.display = "block";
-      popup.className = `popup ${type === "success" ? "success-popup" : "error-popup"}`;
-      setTimeout(() => { popup.style.display = "none"; }, 6000);
-    }
-
-    function formatFieldName(field) {
-      return field.replace(/([A-Z])/g, ' $1').trim();
-    }
-
-    // Store callback for handling the uploaded URL
-    let onUploadComplete = null;
-
-    function openUploadPopup() {
-      return new Promise((resolve) => {
-        const popup = document.getElementById('popup2');
-        const overlay = document.getElementById('overlay2');
-        
-        popup.style.display = 'block';
-        overlay.style.display = 'block';
-        
-        // Store resolve function to return URL later
-        onUploadComplete = (url) => {
-          resolve(url);
-          closePopup();
-        };
-      });
-    }
-
-    function closePopup() {
-      const popup = document.getElementById('popup2');
-      const overlay = document.getElementById('overlay2');
-      popup.style.display = 'none';
-      overlay.style.display = 'none';
-      document.getElementById('fileInput').value = '';
-      // document.getElementById('result').textContent = '';
-    }
-
-    // Cloudinary configuration
-    const cloudName = 'dlf856fpj'; // Replace with your Cloudinary cloud name
-    const uploadPreset = 'profile_pics'; // Replace with your unsigned upload preset
-    const apiUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
-
-    async function uploadFile() {
-      const fileInput = document.getElementById('fileInput');
-      const result = document.getElementById('result');
-      const file = fileInput.files[0];
-
-      if (!file) {
-        result.textContent = 'Please select a file';
-        return;
-      }
-      
-      try {
-        console.log('Uploading now');
-        const formData = new FormData();
-        formData.append('file', file); // Use 'file' as expected by Cloudinary
-        formData.append('upload_preset', uploadPreset);
-
-        // Set up XMLHttpRequest
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', apiUrl, true);
-
-        // Handle response
-        xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            const response = JSON.parse(xhr.responseText);
-            if (onUploadComplete) {
-              onUploadComplete(response.secure_url);
+        function fetchMemberData() {
+            const memberId = document.getElementById("memberId").value.trim();
+            if (!memberId) {
+                alert("Please enter a valid ITS No.");
+                return;
             }
-            console.log('Uploaded file URL:', response.secure_url); // Log URL for use
-            updatedPicture = response.secure_url;
-            console.log('Uploaded picture: ', updatedPicture);
-            // Update the img element's src attribute
-            const pictureElement = document.getElementById('picture');
-            console.log('Picture element: ', pictureElement);
-            // Update the img element's src attribute
-            pictureElement.src = response.secure_url;
-            // show a success popup
-            showPopup("Profile picture uploaded successfully!", "success");
-          } else {
-            error('Upload failed: ' + xhr.statusText);
-            showPopup("Error uploading picture.", "error");
-          }
-        };
+            showLoader();
+            fetch("https://script.google.com/macros/s/AKfycbwotrvigCpD2lJ1lQouC_6TfqzhxSuvIoj1UXK1MMK1Pk86AAPqWSIOEWGkEBDpmzPx8w/exec?id=" + memberId)
+                .then(response => response.json())
+                .then(data => {
+                    hideLoader();
+                    if (data.error) {
+                        showPopup(data.error, "error");
+                    } else {
+                        currentMemberData = data;
+                        updatedPicture = data.picture || "";
+                        document.getElementById("result").innerHTML = `
+                            <label>Title:</label>
+                            <select id="title">
+                                <option ${data.title === "Bhai" ? "selected" : ""}>Bhai</option>
+                                <option ${data.title === "Mulla" ? "selected" : ""}>Mulla</option>
+                                <option ${data.title === "Sheikh" ? "selected" : ""}>Sheikh</option>
+                            </select>
+                            <label>Full Name:</label><input type="text" id="fullName" value="${data.fullName}">
+                            
+                            <!-- Hidden fields to retain original structure for doPost -->
+                            <div class="hidden-field">
+                                <label>First Name:</label><input type="text" id="firstName" value="${data.firstName}" disabled>
+                                <label>Last Name:</label><input type="text" id="lastName" value="${data.lastName}" disabled>
+                            </div>
+                            
+                            <label>Team No.:</label><input type="text" id="teamNumber" value="${data.teamNumber}" disabled>
+                            <label>Calling No.:</label><input type="text" id="callingNumber" value="${data.callingNumber}">
+                            <label>WhatsApp No.:</label><input type="text" id="whatsappNumber" value="${data.whatsappNumber}">
+                            <label>Address:</label><textarea id="address">${data.address}</textarea>
+                            <label>Current City Residing:</label><input type="text" id="city" value="${data.city}">
+                            <label>Country</label><input type="text" id="country" value="${data.country}">
+                            <label>Hifz Status:</label>
+                            <select id="hifzStatus">
+                                <option>${data.hifzStatus}</option>
+                                <option>Surat Al Asar</option>
+                                <option>Surat Al Balad</option>
+                                <option>Surat Al Inshiqaq</option>
+                                <option>Marhala Ula (30)</option>
+                                <option>Marhala Saniyah (28,29)</option>
+                                <option>Marhala Sadlisah (26,27)</option>
+                                <option>Marhala Rabiah (1-5)</option>
+                                <option>Marhala Khamisah (6-10)</option>
+                                <option>Marhala Sadisah (11-15)</option>
+                                <option>Marhala Sabiah (16-20)</option>
+                                <option>Marhala Nihaiyyah (21-25)</option>
+                                <option>Hafiz</option>
+                            </select>
+                            <label>Qualification:</label>
+                            <select id="qualification">
+                                <option>${data.qualification}</option>
+                                <option>Student: High school</option>
+                                <option>Student: University</option>
+                                <option>Business Owner</option>
+                                <option>Salaried Professional</option>
+                                <option>Freelancer</option>
+                                <option>Other</option>
+                            </select>
+                            <label>Are you a part of any other Sanstha:</label>
+                            <select id="otherSanstha">
+                                <option>${data.otherSanstha}</option>
+                                <option>Not Applicable</option>
+                                <option disabled>-- If Yes:- --</option>
+                                <option>Shabab Ul Eidiz Zahabi</option>
+                                <option>Burhani Guards</option>
+                                <option>Faiz Ul Mawaid Al Burhaniyah</option>
+                                <option>Nazafat</option>
+                                <option>Transport</option>
+                                <option>Dana Committee</option>
+                                <option>IT AVR</option>
+                                <option>Tazyeen</option>
+                                <option>Zakereen</option>
+                                <option>Attalim Khidmat</option>
+                            </select>
+                            <label>Attending Sabaq:</label>
+                            <select id="attendingSabak">
+                                <option>${data.attendingSabak}</option>
+                                <option>Not Attending</option>
+                                <option disabled>-- If Yes:- --</option>
+                                <option>Zahir</option>
+                                <option>Taweel</option>
+                                <option>Hakikat</option>
+                            </select>
+                            <label>Do you have Jacket:</label>
+                            <select id="jacket">
+                                <option>${data.jacket}</option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                            <label>Do you have Lanyard:</label>
+                            <select id="lanyard">
+                                <option>${data.lanyard}</option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                            <label>Baligh Status:</label>
+                            <select id="baligh">
+                                <option>${data.baligh}</option>
+                                <option>Yes</option>
+                                <option>No</option>
+                            </select>
+                            <label>Skills:</label><input type="text" id="skills" value="${data.skills || ''}" placeholder="E.g., IT Support, Cooking, Photography">
+                            <label>Sports:</label><input type="text" id="sports" value="${data.sports || ''}" placeholder="E.g., Football, Cricket, Basketball">
+                            <label>Hobbies:</label><input type="text" id="hobbies" value="${data.hobbies || ''}" placeholder="E.g., Reading, Gardening, Hiking">
+                            
+                            <div class="photo-guidelines">
+                                <details>
+                                    <summary>View Required Photo Guidelines</summary>
+                                    <ul>
+                                        <li>Must be a **Passport Size Photo** (2x2 ratio).</li>
+                                        <li>Background should be **Plain Grey or Off-White**.</li>
+                                        <li>Full face visible, clear, and recent.</li>
+                                        <li>High resolution image recommended.</li>
+                                    </ul>
+                                </details>
+                            </div>
 
-        // Handle errors
-        xhr.onerror = () => {
-          error('Upload error');
-          showPopup("Error uploading picture.", "error");
-        };
-
-        // Send request
-        xhr.send(formData); 
-
-        // Return abort function
-        return {
-          abort: () => {
-            xhr.abort();
-          }
-        };
-        } catch (error) {
-          result.textContent = 'Error: ' + error.message;
+                            <label>Profile Picture</label>
+                            <div id="profile">
+                                <img id="picture" src="${data.picture || placeholder}"/>
+                            </div>
+                            <br>
+                            <button onclick="openUploadPopup()">Upload Picture</button>
+                            <button onclick="updateMemberData()">Update</button>
+                        `;
+                    }
+                });
         }
-    }
-  </script>
+
+        function updateMemberData() {
+            // Check if there is no current picture and no new picture has been uploaded
+            if (!currentMemberData.picture && !updatedPicture) {
+                showPopup("Please upload your latest 2x2 passport size photo", "error");
+                return;
+            }
+
+            // Updated required fields list
+            const requiredFields = [
+                "title", "fullName", "teamNumber", "callingNumber", "whatsappNumber", "address",
+                "city", "hifzStatus", "qualification", "otherSanstha", "attendingSabak",
+                "jacket", "lanyard", "baligh"
+            ];
+
+            for (const field of requiredFields) {
+                let value = document.getElementById(field)?.value?.trim();
+                if (!value) {
+                    showPopup(`Please fill in the required field: ${formatFieldName(field)}`, "error");
+                    return;
+                }
+            }
+
+            // Logic to split the new full name into first and last name for storage
+            const fullName = document.getElementById("fullName").value.trim();
+            const nameParts = fullName.split(/\s+/);
+            const newLastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
+            const newFirstName = nameParts.slice(0, nameParts.length - 1).join(" ") || fullName;
+
+            const updatedData = {
+                itsno: currentMemberData.itsno,
+                title: document.getElementById("title").value,
+                fullName: fullName, 
+                teamNumber: document.getElementById("teamNumber").value,
+                callingNumber: document.getElementById("callingNumber").value,
+                whatsappNumber: document.getElementById("whatsappNumber").value,
+                address: document.getElementById("address").value,
+                city: document.getElementById("city").value,
+                country: document.getElementById("country").value,
+                hifzStatus: document.getElementById("hifzStatus").value,
+                qualification: document.getElementById("qualification").value,
+                otherSanstha: document.getElementById("otherSanstha").value,
+                attendingSabak: document.getElementById("attendingSabak").value,
+                jacket: document.getElementById("jacket").value,
+                lanyard: document.getElementById("lanyard").value,
+                baligh: document.getElementById("baligh").value,
+                skills: document.getElementById("skills").value,
+                sports: document.getElementById("sports").value,
+                hobbies: document.getElementById("hobbies").value, // NEW: Hobbies field
+                picture: updatedPicture || currentMemberData.picture,
+                // Send split name parts for the separate columns at the end
+                firstName: newFirstName, 
+                lastName: newLastName,  
+            };
+
+            showLoader();
+            fetch("https://script.google.com/macros/s/AKfycbwotrvigCpD2lJ1lQouC_6TfqzhxSuvIoj1UXK1MMK1Pk86AAPqWSIOEWGkEBDpmzPx8w/exec", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedData),
+                mode: "no-cors"
+            }).then(() => {
+                showPopup("Member Updated Successfully!", "success");
+                fetchMemberData();
+            }).catch(error => {
+                showPopup(`Update failed: ${error}`, "error");
+            });
+        }
+
+        function showPopup(message, type) {
+            const popup = document.getElementById("popup");
+            popup.innerText = message;
+            popup.style.display = "block";
+            popup.className = `popup ${type === "success" ? "success-popup" : "error-popup"}`;
+            setTimeout(() => {
+                popup.style.display = "none";
+            }, 6000);
+        }
+
+        function formatFieldName(field) {
+            return field.replace(/([A-Z])/g, ' $1').trim();
+        }
+
+        let onUploadComplete = null;
+
+        function openUploadPopup() {
+            return new Promise((resolve) => {
+                const popup = document.getElementById('popup2');
+                const overlay = document.getElementById('overlay2');
+                popup.style.display = 'block';
+                overlay.style.display = 'block';
+                onUploadComplete = (url) => {
+                    resolve(url);
+                    closePopup();
+                };
+            });
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('popup2');
+            const overlay = document.getElementById('overlay2');
+            popup.style.display = 'none';
+            overlay.style.display = 'none';
+            document.getElementById('fileInput').value = '';
+        }
+
+        const cloudName = 'dlf856fpj';
+        const uploadPreset = 'profile_pics';
+        const apiUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const result = document.getElementById('result');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                result.textContent = 'Please select a file';
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', uploadPreset);
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', apiUrl, true);
+
+                xhr.onload = () => {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (onUploadComplete) {
+                            onUploadComplete(response.secure_url);
+                        }
+                        updatedPicture = response.secure_url;
+                        document.getElementById('picture').src = response.secure_url;
+                        showPopup("Profile picture uploaded successfully!", "success");
+                    } else {
+                        showPopup("Error uploading picture.", "error");
+                    }
+                };
+
+                xhr.onerror = () => {
+                    showPopup("Error uploading picture.", "error");
+                };
+
+                xhr.send(formData);
+                return { abort: () => { xhr.abort(); } };
+            } catch (error) {
+                result.textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
 </body>
 </html>
