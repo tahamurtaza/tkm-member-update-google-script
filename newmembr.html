@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Member Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Basic reset for better consistency */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            font-family: 'Poppins', sans-serif; /* Modern, clean font */
+            background-color: #eef2f6; /* A very light, cool background */
+            color: #333; /* Default text color */
+        }
+
+        .main-wrapper {
+            min-height: 100vh; /* Ensure wrapper covers full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align form to the top of the container */
+            padding: 40px 20px; /* Generous padding around the form */
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); /* Subtle gradient background */
+            overflow-y: auto; /* Allow scrolling if form is taller than viewport */
+        }
+
+        .form-card {
+            background-color: #ffffff; /* White background for the form card */
+            border-radius: 16px; /* More pronounced rounded corners */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); /* Stronger, softer shadow for depth */
+            padding: 30px; /* Padding inside the card */
+            max-width: 800px; /* Max width for readability */
+            width: 100%; /* Full width up to max-width */
+            box-sizing: border-box;
+            border: 1px solid #e0e6ed; /* Light border */
+            transform: translateY(0); /* Initial state for animation */
+            transition: transform 0.5s ease-out, box-shadow 0.3s ease-in-out;
+            margin-top: 20px; /* Space from the top of the wrapper */
+            margin-bottom: 20px; /* Space from the bottom of the wrapper */
+        }
+
+        .form-card:hover {
+            transform: translateY(-5px); /* Slight lift on hover */
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+        }
+
+        .form-card h1 {
+            font-size: 2.2em; /* Larger, more prominent title */
+            color: #2c3e50; /* Darker, more serious heading color */
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600; /* Bolder font weight */
+            letter-spacing: -0.5px;
+        }
+
+        .iframe-wrapper {
+            position: relative;
+            /* Using padding-bottom hack for aspect ratio, adjust if form has fixed height */
+            /* For Google Forms, it often works better with a fixed height or min-height */
+            width: 100%;
+            height: 1839px; /* Explicit height from your original iframe */
+            border-radius: 10px; /* Match card's border-radius subtly */
+            overflow: hidden; /* Ensures iframe corners are rounded */
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05); /* Inner shadow for depth */
+            border: none; /* Remove iframe's default border */
+        }
+
+        .iframe-wrapper iframe {
+            position: absolute; /* Occupy wrapper space */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none; /* No border for the iframe itself */
+            background-color: transparent; /* Ensure background shows if part of iframe is transparent */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-card {
+                padding: 20px;
+                border-radius: 12px;
+            }
+            .form-card h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+            .main-wrapper {
+                padding: 20px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <div class="form-card">
+            <div class="iframe-wrapper">
+                <iframe
+                    src="https://docs.google.com/forms/d/e/1FAIpQLSco_VLJqd8s_VQL0XnLGsY7UWj-WNiJZMvloa7MQ8wlaro4kA/viewform?embedded=true"
+                    frameborder="0"
+                    marginheight="0"
+                    marginwidth="0">
+                    Loading…
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
