@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toloba Member Directory</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --glass-bg: rgba(255,255,255,0.055);
+      --glass-border: rgba(255,255,255,0.1);
+      --glass-shadow: rgba(0,0,0,0.4);
+      --glass-blur: blur(24px);
+      --accent: #3b82f6;
+      --accent-soft: rgba(59,130,246,0.12);
+      --accent-glow: rgba(59,130,246,0.25);
+      --text-primary: rgba(255,255,255,0.92);
+      --text-secondary: rgba(255,255,255,0.5);
+      --text-tertiary: rgba(255,255,255,0.28);
+      --danger: #ef4444;
+      --success: #22c55e;
+      --warning: #eab308;
+      --wa-green: #25d366;
+      --radius-xl: 20px;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-sm: 7px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+      min-height: 100vh;
+      background: #0c0c0e;
+      background-attachment: fixed;
+      color: var(--text-primary);
+      overflow-x: hidden;
+    }
+
+    /* ── Subtle background orb ── */
+    body::before {
+      content: '';
+      position: fixed;
+      width: 800px; height: 800px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(circle, #3b82f6, transparent 70%);
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+    }
+    body::after { display: none; }
+
+    /* ── Layout ── */
+    .app { position: relative; z-index: 1; }
+
+    /* ── Glass Mixin ── */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur) saturate(180%);
+      -webkit-backdrop-filter: var(--glass-blur) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+
+    /* ── Header ── */
+    header {
+      padding: 28px 32px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(12,12,14,0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #0a84ff, #5e5ce6);
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      box-shadow: 0 4px 16px rgba(10,132,255,0.4);
+      flex-shrink: 0;
+    }
+
+    .brand-text h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      background: linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.75) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text p {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-top: 1px;
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 12px;
+    }
+
+    .stat-pill {
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-pill.total { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-glow); }
+    .stat-pill.shown { background: rgba(48,209,88,0.15); color: var(--success); border: 1px solid rgba(48,209,88,0.3); }
+
+    /* ── Main Content ── */
+    main { padding: 28px 32px 60px; max-width: 1600px; margin: 0 auto; }
+
+    /* ── Search & Filter Bar ── */
+    .filter-bar {
+      border-radius: var(--radius-xl);
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    input[type="text"], input[type="search"], select {
+      width: 100%;
+      padding: 11px 14px 11px 42px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+
+    select { padding-left: 14px; cursor: pointer; }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      background: rgba(10,132,255,0.08);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    input::placeholder { color: var(--text-tertiary); }
+    select option { background: #1a1a4e; color: #fff; }
+
+    .filters-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-select-wrap {
+      position: relative;
+      min-width: 150px;
+      flex: 1;
+    }
+
+    .filter-select-wrap select { padding-left: 14px; }
+
+    .filter-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+      align-self: center;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0a84ff, #5e5ce6);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(10,132,255,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(10,132,255,0.5); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.08);
+      color: var(--text-secondary);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.14); color: var(--text-primary); }
+
+    /* ── View Toggle ── */
+    .view-toggle {
+      display: flex;
+      gap: 4px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-sm);
+      padding: 3px;
+    }
+
+    .view-btn {
+      width: 34px; height: 30px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: all 0.15s;
+    }
+    .view-btn.active { background: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(10,132,255,0.4); }
+    .view-btn:hover:not(.active) { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+
+    /* ── Loading State ── */
+    .loading-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      gap: 20px;
+    }
+
+    .loading-screen.visible { display: flex; }
+
+    .spinner {
+      width: 48px; height: 48px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-screen p { color: var(--text-secondary); font-size: 15px; }
+
+    /* ── Empty State ── */
+    .empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      gap: 16px;
+      text-align: center;
+    }
+    .empty-state.visible { display: flex; }
+    .empty-icon { font-size: 56px; opacity: 0.6; }
+    .empty-state h3 { font-size: 20px; font-weight: 600; }
+    .empty-state p { color: var(--text-secondary); font-size: 14px; }
+
+    /* ── Error Banner ── */
+    .error-banner {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      border-radius: var(--radius-md);
+      background: rgba(255,69,58,0.15);
+      border: 1px solid rgba(255,69,58,0.3);
+      color: #ff6b63;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .error-banner.visible { display: flex; }
+
+    /* ── Grid ── */
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .members-grid.list-view {
+      grid-template-columns: 1fr;
+    }
+
+    /* ── Member Card ── */
+    .member-card {
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      cursor: pointer;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.35s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .member-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .member-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(10,132,255,0.4);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(10,132,255,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .avatar {
+      width: 56px; height: 56px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #0a84ff, #5e5ce6);
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.15);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+
+    .card-identity { flex: 1; min-width: 0; }
+
+    .card-name {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-its {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      font-family: "SF Mono", "Menlo", monospace;
+    }
+
+    .team-badge {
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid var(--accent-glow);
+      white-space: nowrap;
+      margin-top: 4px;
+      display: inline-block;
+    }
+
+    .card-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .detail-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-tertiary);
+    }
+
+    .detail-value {
+      font-size: 13px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+
+    .tag {
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-secondary);
+    }
+
+    .tag.hifz, .tag.baligh, .tag.sports { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); color: var(--text-secondary); }
+
+    .card-footer {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-wa {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      border: none;
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: all 0.18s;
+      box-shadow: 0 4px 12px rgba(37,211,102,0.3);
+    }
+    .btn-wa:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,211,102,0.45); }
+    .btn-wa:active { transform: translateY(0); }
+    .btn-wa:disabled {
+      background: rgba(255,255,255,0.08);
+      color: var(--text-tertiary);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-detail {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.07);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: all 0.18s;
+      flex-shrink: 0;
+    }
+    .btn-detail:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* ── List View Card Overrides ── */
+    .members-grid.list-view .member-card {
+      padding: 18px 24px;
+    }
+
+    .members-grid.list-view .card-header {
+      margin-bottom: 0;
+      align-items: center;
+    }
+
+    .members-grid.list-view .card-details,
+    .members-grid.list-view .card-tags { display: none; }
+
+    .members-grid.list-view .card-footer {
+      margin-top: 0;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .members-grid.list-view .member-card .inner {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 500;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .modal-overlay.open { display: grid; }
+
+    .modal {
+      width: 100%;
+      max-width: 640px;
+      max-height: 90vh;
+      border-radius: 20px;
+      background: rgba(16,16,18,0.92);
+      backdrop-filter: blur(40px) saturate(150%);
+      -webkit-backdrop-filter: blur(40px) saturate(150%);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: modalIn 0.28s cubic-bezier(0.34,1.56,0.64,1) both;
+      margin: auto;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.9) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-header {
+      padding: 28px 28px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .modal-avatar {
+      width: 72px; height: 72px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #0a84ff, #5e5ce6);
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      font-weight: 700;
+      flex-shrink: 0;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.2);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .modal-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+
+    .modal-identity { flex: 1; min-width: 0; }
+    .modal-identity .title-prefix { font-size: 13px; color: var(--text-tertiary); margin-bottom: 2px; }
+    .modal-identity h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 6px; }
+    .modal-identity .meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+    .modal-close {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .modal-close:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+    .modal-body {
+      padding: 24px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-tertiary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .info-item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+    }
+
+    .info-item .label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-tertiary);
+      margin-bottom: 4px;
+    }
+
+    .info-item .value {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .info-item.full { grid-column: 1 / -1; }
+
+    .pills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .modal-pill {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text-secondary);
+    }
+
+    .modal-footer {
+      padding: 16px 28px 24px;
+      display: flex;
+      gap: 10px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      flex-shrink: 0;
+    }
+
+    .btn-wa-lg {
+      flex: 1;
+      padding: 13px 20px;
+      border-radius: var(--radius-lg);
+      border: none;
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      transition: all 0.18s;
+      box-shadow: 0 6px 20px rgba(37,211,102,0.35);
+    }
+    .btn-wa-lg:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(37,211,102,0.5); }
+    .btn-wa-lg:disabled {
+      background: rgba(255,255,255,0.08);
+      color: var(--text-tertiary);
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    /* ── Config notice ── */
+    .config-notice {
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    .config-notice h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .config-notice p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+    .config-notice code {
+      background: rgba(255,255,255,0.1);
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-family: "SF Mono", "Menlo", monospace;
+      font-size: 12px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 680px) {
+      header { padding: 18px 20px; }
+      main { padding: 20px 16px 60px; }
+      .members-grid { grid-template-columns: 1fr; }
+      .info-grid { grid-template-columns: 1fr; }
+      .modal { border-radius: 20px; }
+      .header-stats { display: none; }
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
+  </style>
+</head>
+<body>
+<!-- ── Login Gate ── -->
+<div id="login-gate" style="
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  background:#0c0c0e;
+  padding:20px;
+">
+  <div style="
+    width:100%;max-width:380px;
+    background:rgba(255,255,255,0.055);
+    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:20px;
+    padding:36px 32px 32px;
+    box-shadow:0 32px 80px rgba(0,0,0,0.6);
+    display:flex;flex-direction:column;gap:20px;
+  ">
+    <div style="text-align:center;margin-bottom:4px;">
+      <div style="
+        width:52px;height:52px;border-radius:16px;
+        background:linear-gradient(135deg,#3b82f6,#6366f1);
+        display:grid;place-items:center;font-size:24px;
+        margin:0 auto 16px;
+        box-shadow:0 4px 20px rgba(59,130,246,0.3);
+      ">🕌</div>
+      <h2 style="font-size:19px;font-weight:700;color:rgba(255,255,255,0.92);letter-spacing:-0.3px;">Toloba Directory</h2>
+      <p style="font-size:13px;color:rgba(255,255,255,0.35);margin-top:4px;">Sign in to continue</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="position:relative;">
+        <input id="login-its" type="text" placeholder="ITS Number"
+          inputmode="numeric"
+          style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:rgba(255,255,255,0.92);font-size:14px;font-family:inherit;outline:none;"
+          onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()"
+        />
+      </div>
+      <div style="position:relative;">
+        <input id="login-pass" type="password" placeholder="Password"
+          style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:rgba(255,255,255,0.92);font-size:14px;font-family:inherit;outline:none;"
+          onkeydown="if(event.key==='Enter')doLogin()"
+        />
+      </div>
+    </div>
+
+    <p id="login-error" style="font-size:13px;color:#ef4444;text-align:center;display:none;margin-top:-8px;">
+      Incorrect ITS number or password.
+    </p>
+
+    <button onclick="doLogin()" style="
+      width:100%;padding:13px;border:none;border-radius:10px;
+      background:linear-gradient(135deg,#3b82f6,#6366f1);
+      color:#fff;font-size:15px;font-weight:600;font-family:inherit;
+      cursor:pointer;box-shadow:0 4px 16px rgba(59,130,246,0.3);
+      transition:opacity 0.15s;
+    " onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+      Sign In
+    </button>
+  </div>
+</div>
+
+<div class="app" id="main-app" style="display:none;">
+
+  <!-- ── Header ── -->
+  <header>
+    <div class="header-brand">
+      <div class="brand-icon">🕌</div>
+      <div class="brand-text">
+        <h1>Toloba Directory</h1>
+        <p>Member Management System</p>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-pill total">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <span id="total-count">0</span> Total
+      </div>
+      <div class="stat-pill shown">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        <span id="shown-count">0</span> Shown
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Config Notice (shown when API URL not set) -->
+    <div id="config-notice" class="config-notice glass" style="display:none;">
+      <h3>⚙️ Configuration Required</h3>
+      <p>
+        Open this file, scroll to the <code>&lt;script&gt;</code> section at the bottom,<br />
+        and replace <code>YOUR_APPS_SCRIPT_URL</code> with your deployed Google Apps Script web app URL.<br />
+        Also make sure you've added the <code>getAllMembers</code> action to your Apps Script.
+      </p>
+    </div>
+
+    <!-- Error Banner -->
+    <div id="error-banner" class="error-banner glass">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      <span id="error-text"></span>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar glass">
+      <div class="search-row">
+        <div class="search-wrap" style="flex:2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="search" id="search-input" placeholder="Search by name, ITS No., city…" />
+        </div>
+        <button class="btn btn-ghost" onclick="clearFilters()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          Clear
+        </button>
+        <div class="view-toggle">
+          <button class="view-btn active" id="grid-btn" onclick="setView('grid')" title="Grid view">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>
+          </button>
+          <button class="view-btn" id="list-btn" onclick="setView('list')" title="List view">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="filters-row">
+        <span class="filter-label">Filter:</span>
+        <div class="filter-select-wrap">
+          <select id="filter-country" onchange="applyFilters()">
+            <option value="">🌍 All Countries</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap">
+          <select id="filter-city" onchange="applyFilters()">
+            <option value="">🏙️ All Cities</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap">
+          <select id="filter-hifz" onchange="applyFilters()">
+            <option value="">📖 Hifz Status</option>
+            <option value="Hafiz">Hafiz</option>
+            <option value="In Progress">In Progress</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap">
+          <select id="filter-team" onchange="applyFilters()">
+            <option value="">👥 All Teams</option>
+          </select>
+        </div>
+        <div class="filter-select-wrap">
+          <select id="filter-baligh" onchange="applyFilters()">
+            <option value="">🌙 Baligh</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-screen" id="loading">
+      <div class="spinner"></div>
+      <p>Loading member directory…</p>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon">🔍</div>
+      <h3>No members found</h3>
+      <p>Try adjusting your search or filters.</p>
+    </div>
+
+    <!-- Members Grid -->
+    <div class="members-grid" id="members-grid"></div>
+
+  </main>
+</div><!-- end #main-app -->
+
+<!-- ── Member Detail Modal ── -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-avatar" id="modal-avatar">?</div>
+      <div class="modal-identity">
+        <div class="title-prefix" id="modal-title-prefix"></div>
+        <h2 id="modal-name"></h2>
+        <div class="meta">
+          <span class="card-its" id="modal-its"></span>
+          <span class="team-badge" id="modal-team" style="display:none"></span>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Contact -->
+      <div>
+        <div class="section-title">Contact</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="label">Calling No.</div>
+            <div class="value" id="modal-calling">—</div>
+          </div>
+          <div class="info-item">
+            <div class="label">WhatsApp No.</div>
+            <div class="value" id="modal-wa">—</div>
+          </div>
+          <div class="info-item full">
+            <div class="label">Address</div>
+            <div class="value" id="modal-address">—</div>
+          </div>
+          <div class="info-item">
+            <div class="label">City</div>
+            <div class="value" id="modal-city">—</div>
+          </div>
+          <div class="info-item">
+            <div class="label">Country</div>
+            <div class="value" id="modal-country">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Religious & Academic -->
+      <div>
+        <div class="section-title">Religious & Academic</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="label">Hifz Status</div>
+            <div class="value" id="modal-hifz">—</div>
+          </div>
+          <div class="info-item">
+            <div class="label">Qualification</div>
+            <div class="value" id="modal-qual">—</div>
+          </div>
+          <div class="info-item">
+            <div class="label">Other Sanstha</div>
+            <div class="value" id="modal-sanstha">—</div>
+          </div>
+          <div class="info-item">
+            <div class="label">Attending Sabak</div>
+            <div class="value" id="modal-sabak">—</div>
+          </div>
+          <div class="info-item">
+            <div class="label">Baligh</div>
+            <div class="value" id="modal-baligh">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Equipment -->
+      <div>
+        <div class="section-title">Equipment</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="label">Jacket</div>
+            <div class="value" id="modal-jacket">—</div>
+          </div>
+          <div class="info-item">
+            <div class="label">Lanyard</div>
+            <div class="value" id="modal-lanyard">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interests -->
+      <div id="interests-section">
+        <div class="section-title">Interests</div>
+        <div class="pills-wrap" id="modal-sports"></div>
+        <div class="pills-wrap" style="margin-top:8px" id="modal-skills"></div>
+        <div class="pills-wrap" style="margin-top:8px" id="modal-hobbies"></div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-wa-lg" id="modal-wa-btn" onclick="openWA(currentMember && currentMember.whatsappNumber)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Open WhatsApp
+      </button>
+      <button class="btn-ghost btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ════════════════════════════════════════════════════════
+  //  CONFIGURATION — Replace with your Apps Script web app URL
+  // ════════════════════════════════════════════════════════
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2p_3yVl3kiT-8OaqnNK8tRICYgN08ijwWeTEQdI8s1d_t9VSl8ql3IyeKxfD2JF_64A/exec';
+
+  // ════════════════════════════════════════════════════════
+  //  Auth
+  // ════════════════════════════════════════════════════════
+  const AUTH = { its: '50496674', password: '5253' };
+
+  function doLogin() {
+    const its  = document.getElementById('login-its').value.trim();
+    const pass = document.getElementById('login-pass').value.trim();
+    const err  = document.getElementById('login-error');
+
+    if (its === AUTH.its && pass === AUTH.password) {
+      document.getElementById('login-gate').style.display = 'none';
+      document.getElementById('main-app').style.display = 'block';
+      err.style.display = 'none';
+      initApp();
+    } else {
+      err.style.display = 'block';
+      document.getElementById('login-pass').value = '';
+      document.getElementById('login-pass').focus();
+    }
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  State
+  // ════════════════════════════════════════════════════════
+  let allMembers = [];
+  let filteredMembers = [];
+  let currentView = 'grid';
+  let currentMember = null;
+
+  // ════════════════════════════════════════════════════════
+  //  Init
+  // ════════════════════════════════════════════════════════
+  function initApp() {
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL') {
+      document.getElementById('config-notice').style.display = 'block';
+      document.getElementById('loading').classList.remove('visible');
+      return;
+    }
+    document.getElementById('search-input').addEventListener('input', debounce(applyFilters, 250));
+    loadMembers();
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  Fetch all members
+  // ════════════════════════════════════════════════════════
+  async function loadMembers() {
+    setLoading(true);
+    hideError();
+    try {
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=getAllMembers`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      if (json.error) throw new Error(json.error);
+      allMembers = json.members || [];
+      buildFilterOptions();
+      applyFilters();
+    } catch (err) {
+      showError(`Failed to load members: ${err.message}. Make sure you've added the getAllMembers action to your Apps Script.`);
+      document.getElementById('empty-state').classList.add('visible');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  Filter & Search
+  // ════════════════════════════════════════════════════════
+  function applyFilters() {
+    const search = document.getElementById('search-input').value.trim().toLowerCase();
+    const country = document.getElementById('filter-country').value;
+    const city = document.getElementById('filter-city').value;
+    const hifz = document.getElementById('filter-hifz').value;
+    const team = document.getElementById('filter-team').value;
+    const baligh = document.getElementById('filter-baligh').value;
+
+    filteredMembers = allMembers.filter(m => {
+      if (search) {
+        const hay = `${m.fullName} ${m.itsno} ${m.city} ${m.country} ${m.teamNumber}`.toLowerCase();
+        if (!hay.includes(search)) return false;
+      }
+      if (country && m.country !== country) return false;
+      if (city && m.city !== city) return false;
+      if (hifz && m.hifzStatus !== hifz) return false;
+      if (team && String(m.teamNumber) !== team) return false;
+      if (baligh && m.baligh !== baligh) return false;
+      return true;
+    });
+
+    document.getElementById('total-count').textContent = allMembers.length;
+    document.getElementById('shown-count').textContent = filteredMembers.length;
+
+    renderGrid();
+  }
+
+  function buildFilterOptions() {
+    const countries = [...new Set(allMembers.map(m => m.country).filter(Boolean))].sort();
+    const cities    = [...new Set(allMembers.map(m => m.city).filter(Boolean))].sort();
+    const teams     = [...new Set(allMembers.map(m => String(m.teamNumber)).filter(Boolean))].sort((a,b) => +a - +b);
+
+    populateSelect('filter-country', countries, '🌍 All Countries');
+    populateSelect('filter-city', cities, '🏙️ All Cities');
+    populateSelect('filter-team', teams, '👥 All Teams');
+  }
+
+  function populateSelect(id, values, placeholder) {
+    const sel = document.getElementById(id);
+    sel.innerHTML = `<option value="">${placeholder}</option>`;
+    values.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v;
+      opt.textContent = v;
+      sel.appendChild(opt);
+    });
+  }
+
+  function clearFilters() {
+    document.getElementById('search-input').value = '';
+    ['filter-country','filter-city','filter-hifz','filter-team','filter-baligh'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    applyFilters();
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  Render
+  // ════════════════════════════════════════════════════════
+  function renderGrid() {
+    const grid = document.getElementById('members-grid');
+    const empty = document.getElementById('empty-state');
+
+    if (filteredMembers.length === 0) {
+      grid.innerHTML = '';
+      empty.classList.add('visible');
+      return;
+    }
+    empty.classList.remove('visible');
+
+    grid.innerHTML = filteredMembers.map((m, i) => cardHTML(m, i)).join('');
+  }
+
+  function cardHTML(m, i) {
+    const initials = getInitials(m.fullName);
+    const avatarContent = m.picture
+      ? `<img src="${escapeHtml(m.picture)}" alt="${escapeHtml(m.fullName)}" onerror="this.parentElement.textContent='${initials}'" />`
+      : initials;
+
+    const waNum = cleanNumber(m.whatsappNumber);
+    const hasWA = !!waNum;
+
+    const tags = [];
+    if (m.hifzStatus && m.hifzStatus !== 'No') tags.push(`<span class="tag hifz">📖 ${escapeHtml(m.hifzStatus)}</span>`);
+    if (m.baligh === 'Yes') tags.push(`<span class="tag baligh">🌙 Baligh</span>`);
+    if (m.sports) tags.push(`<span class="tag sports">🏃 Sports</span>`);
+
+    const animDelay = `animation-delay:${Math.min(i * 0.04, 0.6)}s`;
+
+    return `
+    <div class="member-card glass" style="${animDelay}" onclick="openModal(${JSON.stringify(m).replace(/"/g, '&quot;')})">
+      <div class="inner">
+        <div class="card-header">
+          <div class="avatar">${avatarContent}</div>
+          <div class="card-identity">
+            ${m.title ? `<div style="font-size:11px;color:var(--text-tertiary);margin-bottom:2px">${escapeHtml(m.title)}</div>` : ''}
+            <div class="card-name">${escapeHtml(m.fullName || '—')}</div>
+            <div class="card-its">ITS: ${escapeHtml(String(m.itsno))}</div>
+            ${m.teamNumber ? `<span class="team-badge">Team ${escapeHtml(String(m.teamNumber))}</span>` : ''}
+          </div>
+        </div>
+
+        <div class="card-details">
+          <div class="detail-item">
+            <span class="detail-label">City</span>
+            <span class="detail-value">${escapeHtml(m.city || '—')}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Country</span>
+            <span class="detail-value">${escapeHtml(m.country || '—')}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Qualification</span>
+            <span class="detail-value">${escapeHtml(m.qualification || '—')}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Sabak</span>
+            <span class="detail-value">${escapeHtml(m.attendingSabak || '—')}</span>
+          </div>
+        </div>
+
+        ${tags.length ? `<div class="card-tags">${tags.join('')}</div>` : ''}
+
+        <div class="card-footer">
+          <button class="btn-wa" ${hasWA ? '' : 'disabled'}
+            onclick="event.stopPropagation(); openWA('${waNum}')"
+            title="${hasWA ? 'Open WhatsApp' : 'No WhatsApp number'}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            ${hasWA ? 'WhatsApp' : 'No Number'}
+          </button>
+          <button class="btn-detail" onclick="event.stopPropagation(); openModal(${JSON.stringify(m).replace(/"/g, '&quot;')})" title="View details">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  Modal
+  // ════════════════════════════════════════════════════════
+  function openModal(m) {
+    if (typeof m === 'string') m = JSON.parse(m.replace(/&quot;/g, '"'));
+    currentMember = m;
+
+    const initials = getInitials(m.fullName);
+    const avatarEl = document.getElementById('modal-avatar');
+    if (m.picture) {
+      avatarEl.innerHTML = `<img src="${escapeHtml(m.picture)}" alt="${escapeHtml(m.fullName)}" onerror="this.parentElement.textContent='${initials}'" />`;
+    } else {
+      avatarEl.textContent = initials;
+    }
+
+    document.getElementById('modal-title-prefix').textContent = m.title || '';
+    document.getElementById('modal-name').textContent = m.fullName || '—';
+    document.getElementById('modal-its').textContent = `ITS: ${m.itsno}`;
+
+    const teamEl = document.getElementById('modal-team');
+    if (m.teamNumber) {
+      teamEl.textContent = `Team ${m.teamNumber}`;
+      teamEl.style.display = 'inline-block';
+    } else {
+      teamEl.style.display = 'none';
+    }
+
+    setText('modal-calling', m.callingNumber);
+    setText('modal-wa', m.whatsappNumber);
+    setText('modal-address', m.address);
+    setText('modal-city', m.city);
+    setText('modal-country', m.country);
+    setText('modal-hifz', m.hifzStatus);
+    setText('modal-qual', m.qualification);
+    setText('modal-sanstha', m.otherSanstha);
+    setText('modal-sabak', m.attendingSabak);
+    setText('modal-baligh', m.baligh);
+    setText('modal-jacket', m.jacket);
+    setText('modal-lanyard', m.lanyard);
+
+    setPills('modal-sports', m.sports, '🏃');
+    setPills('modal-skills', m.skills, '🛠️');
+    setPills('modal-hobbies', m.hobbies, '🎯');
+
+    const waNum = cleanNumber(m.whatsappNumber);
+    const waBtn = document.getElementById('modal-wa-btn');
+    waBtn.disabled = !waNum;
+
+    document.getElementById('modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+    currentMember = null;
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('modal-overlay')) closeModal();
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // ════════════════════════════════════════════════════════
+  //  WhatsApp
+  // ════════════════════════════════════════════════════════
+  function openWA(number) {
+    const clean = cleanNumber(number);
+    if (!clean) return;
+    window.open(`https://wa.me/${clean}`, '_blank');
+  }
+
+  function cleanNumber(number) {
+    if (!number) return '';
+    return String(number).replace(/\D/g, '');
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  View toggle
+  // ════════════════════════════════════════════════════════
+  function setView(view) {
+    currentView = view;
+    const grid = document.getElementById('members-grid');
+    const gridBtn = document.getElementById('grid-btn');
+    const listBtn = document.getElementById('list-btn');
+    if (view === 'list') {
+      grid.classList.add('list-view');
+      listBtn.classList.add('active');
+      gridBtn.classList.remove('active');
+    } else {
+      grid.classList.remove('list-view');
+      gridBtn.classList.add('active');
+      listBtn.classList.remove('active');
+    }
+  }
+
+  // ════════════════════════════════════════════════════════
+  //  Helpers
+  // ════════════════════════════════════════════════════════
+  function setText(id, val) {
+    document.getElementById(id).textContent = val || '—';
+  }
+
+  function setPills(id, val, emoji) {
+    const el = document.getElementById(id);
+    if (!val) { el.innerHTML = ''; return; }
+    const items = String(val).split(/[,;]+/).map(s => s.trim()).filter(Boolean);
+    el.innerHTML = items.map(s => `<span class="modal-pill">${emoji} ${escapeHtml(s)}</span>`).join('');
+  }
+
+  function getInitials(name) {
+    if (!name) return '?';
+    return name.trim().split(/\s+/).slice(0,2).map(w => w[0].toUpperCase()).join('');
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  function debounce(fn, ms) {
+    let t;
+    return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+  }
+
+  function setLoading(show) {
+    document.getElementById('loading').classList.toggle('visible', show);
+  }
+
+  function showError(msg) {
+    const b = document.getElementById('error-banner');
+    document.getElementById('error-text').textContent = msg;
+    b.classList.add('visible');
+  }
+
+  function hideError() {
+    document.getElementById('error-banner').classList.remove('visible');
+  }
+</script>
+</body>
+</html>
