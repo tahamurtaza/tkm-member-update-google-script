@@ -42,7 +42,7 @@
             align-items: center;
         }
         .date-wrapper::after {
-            content: "";
+            content: "📅";
             position: absolute;
             right: 15px;
             pointer-events: none;
@@ -145,7 +145,7 @@
                 return;
             }
             showLoader();
-            fetch("https://script.google.com/macros/s/AKfycbxCdrqah3-dvUou8dBJSBMQdhQA41OaR_M4vzvsWOwuroeKN2H0KzDrsnTvf6SI9jl7HA/exec?id=" + encodeURIComponent(memberId))
+            fetch("https://script.google.com/macros/s/AKfycbzkwxtx0Fr0EtGmbFeH52H2iH8grmRDZAgBps-7rcT-PkUPex23JBV5CA3cCJzo_5980w/exec?id=" + encodeURIComponent(memberId))
                 .then(response => response.json())
                 .then(data => {
                     hideLoader();
@@ -364,7 +364,7 @@
             };
 
             showLoader();
-            fetch("https://script.google.com/macros/s/AKfycbxCdrqah3-dvUou8dBJSBMQdhQA41OaR_M4vzvsWOwuroeKN2H0KzDrsnTvf6SI9jl7HA/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbzkwxtx0Fr0EtGmbFeH52H2iH8grmRDZAgBps-7rcT-PkUPex23JBV5CA3cCJzo_5980w/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedData),
