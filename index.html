@@ -9,15 +9,49 @@
         .container { max-width: 600px; margin: 60px auto; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); padding: 30px 40px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); text-align: left; animation: fadeIn 0.8s ease-in-out; }
         .logo { display: block; margin: 0 auto 20px auto; width: 120px; }
         h2 { text-align: center; color: #205560; margin-bottom: 20px; font-size: 24px; letter-spacing: 1px; }
+        .greeting { text-align: center; font-size: 20px; font-weight: 700; color: #205560; margin-bottom: 20px; background: #e0f2f1; padding: 12px; border-radius: 12px; }
         label { font-weight: 600; display: block; margin-top: 15px; margin-bottom: 6px; color: #205560; }
-        .checkbox-group { margin-bottom: 15px; }
-        .checkbox-group label { display: inline-block; margin-right: 15px; font-weight: normal; color: #333; }
-        .checkbox-group input[type="checkbox"] { width: auto; margin-right: 5px; }
-        input, select, textarea { width: 100%; padding: 12px 14px; border: 1px solid #ccc; border-radius: 12px; outline: none; font-size: 15px; transition: all 0.3s ease; background: #fff; }
+        .address-group { background: #f8fafb; border: 1px solid #dcdfe3; border-radius: 12px; padding: 15px; margin-top: 5px; }
+        .address-group input { margin-bottom: 10px; }
+        .address-group input:last-child { margin-bottom: 0; }
+        input, select, textarea { width: 100%; padding: 12px 14px; border: 1px solid #ccc; border-radius: 12px; outline: none; font-size: 15px; transition: all 0.3s ease; background: #fff; box-sizing: border-box; }
         input:focus, select:focus, textarea:focus { border-color: #205560; box-shadow: 0 0 6px rgba(32, 85, 96, 0.3); }
+        
+        /* Modern Date Input Styling */
+        input[type="date"] {
+            position: relative;
+            color: #333;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
+        }
+        .date-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .date-wrapper::after {
+            content: "📅";
+            position: absolute;
+            right: 15px;
+            pointer-events: none;
+            font-size: 16px;
+        }
+
         button { display: inline-block; margin-top: 20px; padding: 13px 20px; background: #205560; color: white; font-weight: bold; font-size: 16px; border: none; cursor: pointer; border-radius: 30px; width: 100%; transition: all 0.3s ease; }
         button:hover { transform: translateY(-2px); background: #163c44; box-shadow: 0 6px 18px rgba(32, 85, 96, 0.4); }
-        #picture { width: 220px; height: 220px; border-radius: 15px; border: 3px solid #eee; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: block; }
+        #picture { width: 220px; height: 220px; border-radius: 15px; border: 3px solid #eee; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: block; object-fit: cover; }
         
         /* Picture Instructions Styling */
         .photo-guidelines { margin-top: 25px; margin-bottom: 15px; border: 1px solid #cceeff; border-radius: 12px; background: #f0f8ff; padding: 15px; }
@@ -30,9 +64,11 @@
         .popup { display: none; position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 12px; font-weight: 600; color: white; animation: slideDown 0.5s ease; z-index: 2000; }
         .success-popup { background: #4CAF50; }
         .error-popup { background: #D9534F; }
+        
         /* Upload popup */
         .popup2 { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); z-index: 1001; width: 300px; text-align: center; }
         .overlay2 { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+        
         /* Loader */
         #loader { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 15px; backdrop-filter: blur(6px); display: none; }
         select { appearance: none; background: url("data:image/svg+xml;utf8,<svg fill='%23205560' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 12px center/15px auto; cursor: pointer; }
@@ -40,7 +76,6 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-20px);} to { opacity: 1; transform: translateY(0);} }
-        .hidden-field { display: none !important; }
     </style>
 </head>
 <body>
@@ -52,26 +87,55 @@
         <button onclick="fetchMemberData()">Search</button>
         <div id="result"></div>
     </div>
+    
     <div id="popup" class="popup"></div>
     <div id="overlay2" class="overlay2"></div>
+    
     <div id="popup2" class="popup2">
         <h3 style="margin-bottom:15px;color:#205560;">Upload Profile Picture</h3>
-        <input type="file" id="fileInput" style="margin-bottom:10px;">
+        <input type="file" id="fileInput" accept="image/*" style="margin-bottom:10px;">
         <button onclick="uploadFile()">Upload</button>
         <button onclick="closePopup()" style="margin-top:10px;background:#ccc;color:#333;">Cancel</button>
-        <p id="result"></p>
+        <p id="uploadResultStatus" style="margin-top:10px;font-size:14px;color:#555;"></p>
     </div>
+
     <script>
         let currentMemberData = {};
         let updatedPicture = "";
         const placeholder = "https://media.istockphoto.com/id/844000412/vector/default-placeholder-man.jpg?s=612x612&w=0&k=20&c=xFgi95ytbJgyLkN0uUDFA5M4p-Q1s25Ye_M5u86evFc=";
 
-        function showLoader() {
-            document.getElementById("loader").style.display = "block";
+        function showLoader() { document.getElementById("loader").style.display = "block"; }
+        function hideLoader() { document.getElementById("loader").style.display = "none"; }
+
+        // Converts ISO/sheets date to DD/MM/YYYY for input or formatting
+        function formatDateToDMY(dateVal) {
+            if (!dateVal) return "";
+            let d = new Date(dateVal);
+            if (isNaN(d.getTime())) {
+                // Check if string is already DD/MM/YYYY
+                if (typeof dateVal === "string" && dateVal.includes("/")) return dateVal;
+                return dateVal;
+            }
+            let day = String(d.getDate()).padStart(2, '0');
+            let month = String(d.getMonth() + 1).padStart(2, '0');
+            let year = d.getFullYear();
+            return `${day}/${month}/${year}`;
         }
 
-        function hideLoader() {
-            document.getElementById("loader").style.display = "none";
+        // Converts DD/MM/YYYY or date string to YYYY-MM-DD for native <input type="date">
+        function formatDateToISO(dateVal) {
+            if (!dateVal) return "";
+            if (typeof dateVal === "string" && dateVal.includes("/")) {
+                let parts = dateVal.split("/");
+                if (parts.length === 3) {
+                    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                }
+            }
+            let d = new Date(dateVal);
+            if (!isNaN(d.getTime())) {
+                return d.toISOString().split('T')[0];
+            }
+            return "";
         }
 
         function fetchMemberData() {
@@ -81,7 +145,7 @@
                 return;
             }
             showLoader();
-            fetch("https://script.google.com/macros/s/AKfycbwotrvigCpD2lJ1lQouC_6TfqzhxSuvIoj1UXK1MMK1Pk86AAPqWSIOEWGkEBDpmzPx8w/exec?id=" + memberId)
+            fetch("https://script.google.com/macros/s/AKfycbxCdrqah3-dvUou8dBJSBMQdhQA41OaR_M4vzvsWOwuroeKN2H0KzDrsnTvf6SI9jl7HA/exec?id=" + encodeURIComponent(memberId))
                 .then(response => response.json())
                 .then(data => {
                     hideLoader();
@@ -90,30 +154,52 @@
                     } else {
                         currentMemberData = data;
                         updatedPicture = data.picture || "";
+                        
+                        let addrParts = (data.address || "").split(",").map(s => s.trim());
+                        let flatVilla = addrParts[0] || "";
+                        let bldgName = addrParts[1] || "";
+                        let streetNo = addrParts[2] || "";
+                        let landmark = addrParts.slice(3).join(", ") || "";
+
+                        let dobForPicker = formatDateToISO(data.dob);
+                        const greetingName = data.firstName || "Member";
+
                         document.getElementById("result").innerHTML = `
+                            <div class="greeting">Salaam, ${greetingName} Bhai!</div>
+
                             <label>Title:</label>
                             <select id="title">
                                 <option ${data.title === "Bhai" ? "selected" : ""}>Bhai</option>
                                 <option ${data.title === "Mulla" ? "selected" : ""}>Mulla</option>
                                 <option ${data.title === "Sheikh" ? "selected" : ""}>Sheikh</option>
                             </select>
-                            <label>Full Name:</label><input type="text" id="fullName" value="${data.fullName}">
                             
-                            <!-- Hidden fields to retain original structure for doPost -->
-                            <div class="hidden-field">
-                                <label>First Name:</label><input type="text" id="firstName" value="${data.firstName}" disabled>
-                                <label>Last Name:</label><input type="text" id="lastName" value="${data.lastName}" disabled>
+                            <label>Full Name (as per ITS):</label>
+                            <input type="text" id="fullName" value="${data.fullName || ''}" placeholder="Enter exact full name as per ITS">
+                            
+                            <label>Team No.:</label><input type="text" id="teamNumber" value="${data.teamNumber || ''}" disabled>
+                            <label>Calling No.:</label><input type="text" id="callingNumber" value="${data.callingNumber || ''}">
+                            <label>WhatsApp No.:</label><input type="text" id="whatsappNumber" value="${data.whatsappNumber || ''}">
+                            
+                            <label>Date of Birth (DD/MM/YYYY):</label>
+                            <div class="date-wrapper">
+                                <input type="date" id="dob" value="${dobForPicker}">
                             </div>
                             
-                            <label>Team No.:</label><input type="text" id="teamNumber" value="${data.teamNumber}" disabled>
-                            <label>Calling No.:</label><input type="text" id="callingNumber" value="${data.callingNumber}">
-                            <label>WhatsApp No.:</label><input type="text" id="whatsappNumber" value="${data.whatsappNumber}">
-                            <label>Address:</label><textarea id="address">${data.address}</textarea>
-                            <label>Current City Residing:</label><input type="text" id="city" value="${data.city}">
-                            <label>Country</label><input type="text" id="country" value="${data.country}">
+                            <label>Address Details:</label>
+                            <div class="address-group">
+                                <input type="text" id="addrFlat" value="${flatVilla}" placeholder="Flat / Villa Number">
+                                <input type="text" id="addrBldg" value="${bldgName}" placeholder="Building / Villa Name">
+                                <input type="text" id="addrStreet" value="${streetNo}" placeholder="Street Number / Name">
+                                <input type="text" id="addrLandmark" value="${landmark}" placeholder="Landmark (Optional)">
+                            </div>
+
+                            <label>Current City Residing:</label><input type="text" id="city" value="${data.city || ''}">
+                            <label>Country:</label><input type="text" id="country" value="${data.country || ''}">
+                            
                             <label>Hifz Status:</label>
                             <select id="hifzStatus">
-                                <option>${data.hifzStatus}</option>
+                                <option selected>${data.hifzStatus || ''}</option>
                                 <option>Surat Al Asar</option>
                                 <option>Surat Al Balad</option>
                                 <option>Surat Al Inshiqaq</option>
@@ -127,9 +213,10 @@
                                 <option>Marhala Nihaiyyah (21-25)</option>
                                 <option>Hafiz</option>
                             </select>
+                            
                             <label>Qualification:</label>
                             <select id="qualification">
-                                <option>${data.qualification}</option>
+                                <option selected>${data.qualification || ''}</option>
                                 <option>Student: High school</option>
                                 <option>Student: University</option>
                                 <option>Business Owner</option>
@@ -137,9 +224,10 @@
                                 <option>Freelancer</option>
                                 <option>Other</option>
                             </select>
+                            
                             <label>Are you a part of any other Sanstha:</label>
                             <select id="otherSanstha">
-                                <option>${data.otherSanstha}</option>
+                                <option selected>${data.otherSanstha || ''}</option>
                                 <option>Not Applicable</option>
                                 <option disabled>-- If Yes:- --</option>
                                 <option>Shabab Ul Eidiz Zahabi</option>
@@ -153,33 +241,38 @@
                                 <option>Zakereen</option>
                                 <option>Attalim Khidmat</option>
                             </select>
+                            
                             <label>Attending Sabaq:</label>
                             <select id="attendingSabak">
-                                <option>${data.attendingSabak}</option>
+                                <option selected>${data.attendingSabak || ''}</option>
                                 <option>Not Attending</option>
                                 <option disabled>-- If Yes:- --</option>
                                 <option>Zahir</option>
                                 <option>Taweel</option>
                                 <option>Hakikat</option>
                             </select>
+                            
                             <label>Do you have Jacket:</label>
                             <select id="jacket">
-                                <option>${data.jacket}</option>
+                                <option selected>${data.jacket || ''}</option>
                                 <option>Yes</option>
                                 <option>No</option>
                             </select>
+                            
                             <label>Do you have Lanyard:</label>
                             <select id="lanyard">
-                                <option>${data.lanyard}</option>
+                                <option selected>${data.lanyard || ''}</option>
                                 <option>Yes</option>
                                 <option>No</option>
                             </select>
+                            
                             <label>Baligh Status:</label>
                             <select id="baligh">
-                                <option>${data.baligh}</option>
+                                <option selected>${data.baligh || ''}</option>
                                 <option>Yes</option>
                                 <option>No</option>
                             </select>
+                            
                             <label>Skills:</label><input type="text" id="skills" value="${data.skills || ''}" placeholder="E.g., IT Support, Cooking, Photography">
                             <label>Sports:</label><input type="text" id="sports" value="${data.sports || ''}" placeholder="E.g., Football, Cricket, Basketball">
                             <label>Hobbies:</label><input type="text" id="hobbies" value="${data.hobbies || ''}" placeholder="E.g., Reading, Gardening, Hiking">
@@ -188,8 +281,8 @@
                                 <details>
                                     <summary>View Required Photo Guidelines</summary>
                                     <ul>
-                                        <li>Must be a **Passport Size Photo** (2x2 ratio).</li>
-                                        <li>Background should be **Plain Grey or Off-White**.</li>
+                                        <li>Must be a <strong>Passport Size Photo</strong> (2x2 ratio).</li>
+                                        <li>Background should be <strong>Plain Grey or Off-White</strong>.</li>
                                         <li>Full face visible, clear, and recent.</li>
                                         <li>High resolution image recommended.</li>
                                     </ul>
@@ -202,23 +295,25 @@
                             </div>
                             <br>
                             <button onclick="openUploadPopup()">Upload Picture</button>
-                            <button onclick="updateMemberData()">Update</button>
+                            <button onclick="updateMemberData()">Update Data</button>
                         `;
                     }
+                })
+                .catch(err => {
+                    hideLoader();
+                    showPopup("Failed to load member details.", "error");
                 });
         }
 
         function updateMemberData() {
-            // Check if there is no current picture and no new picture has been uploaded
             if (!currentMemberData.picture && !updatedPicture) {
                 showPopup("Please upload your latest 2x2 passport size photo", "error");
                 return;
             }
 
-            // Updated required fields list
             const requiredFields = [
-                "title", "fullName", "teamNumber", "callingNumber", "whatsappNumber", "address",
-                "city", "hifzStatus", "qualification", "otherSanstha", "attendingSabak",
+                "title", "fullName", "teamNumber", "callingNumber", "whatsappNumber", "dob",
+                "city", "country", "hifzStatus", "qualification", "otherSanstha", "attendingSabak",
                 "jacket", "lanyard", "baligh"
             ];
 
@@ -230,20 +325,29 @@
                 }
             }
 
-            // Logic to split the new full name into first and last name for storage
-            const fullName = document.getElementById("fullName").value.trim();
-            const nameParts = fullName.split(/\s+/);
-            const newLastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
-            const newFirstName = nameParts.slice(0, nameParts.length - 1).join(" ") || fullName;
+            const flat = document.getElementById("addrFlat").value.trim();
+            const bldg = document.getElementById("addrBldg").value.trim();
+            const street = document.getElementById("addrStreet").value.trim();
+            const landmark = document.getElementById("addrLandmark").value.trim();
+
+            if (!flat || !bldg || !street) {
+                showPopup("Please complete Flat/Villa, Building, and Street address fields", "error");
+                return;
+            }
+
+            const fullAddress = [flat, bldg, street, landmark].filter(Boolean).join(", ");
+            const rawDobVal = document.getElementById("dob").value;
+            const formattedDob = formatDateToDMY(rawDobVal);
 
             const updatedData = {
                 itsno: currentMemberData.itsno,
                 title: document.getElementById("title").value,
-                fullName: fullName, 
+                fullName: document.getElementById("fullName").value.trim(), 
                 teamNumber: document.getElementById("teamNumber").value,
                 callingNumber: document.getElementById("callingNumber").value,
                 whatsappNumber: document.getElementById("whatsappNumber").value,
-                address: document.getElementById("address").value,
+                dob: formattedDob,
+                address: fullAddress,
                 city: document.getElementById("city").value,
                 country: document.getElementById("country").value,
                 hifzStatus: document.getElementById("hifzStatus").value,
@@ -255,23 +359,22 @@
                 baligh: document.getElementById("baligh").value,
                 skills: document.getElementById("skills").value,
                 sports: document.getElementById("sports").value,
-                hobbies: document.getElementById("hobbies").value, // NEW: Hobbies field
-                picture: updatedPicture || currentMemberData.picture,
-                // Send split name parts for the separate columns at the end
-                firstName: newFirstName, 
-                lastName: newLastName,  
+                hobbies: document.getElementById("hobbies").value,
+                picture: updatedPicture || currentMemberData.picture
             };
 
             showLoader();
-            fetch("https://script.google.com/macros/s/AKfycbwotrvigCpD2lJ1lQouC_6TfqzhxSuvIoj1UXK1MMK1Pk86AAPqWSIOEWGkEBDpmzPx8w/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbxCdrqah3-dvUou8dBJSBMQdhQA41OaR_M4vzvsWOwuroeKN2H0KzDrsnTvf6SI9jl7HA/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedData),
                 mode: "no-cors"
             }).then(() => {
+                hideLoader();
                 showPopup("Member Updated Successfully!", "success");
                 fetchMemberData();
             }).catch(error => {
+                hideLoader();
                 showPopup(`Update failed: ${error}`, "error");
             });
         }
@@ -281,12 +384,11 @@
             popup.innerText = message;
             popup.style.display = "block";
             popup.className = `popup ${type === "success" ? "success-popup" : "error-popup"}`;
-            setTimeout(() => {
-                popup.style.display = "none";
-            }, 6000);
+            setTimeout(() => { popup.style.display = "none"; }, 6000);
         }
 
         function formatFieldName(field) {
+            if (field === "dob") return "Date of Birth";
             return field.replace(/([A-Z])/g, ' $1').trim();
         }
 
@@ -306,11 +408,10 @@
         }
 
         function closePopup() {
-            const popup = document.getElementById('popup2');
-            const overlay = document.getElementById('overlay2');
-            popup.style.display = 'none';
-            overlay.style.display = 'none';
+            document.getElementById('popup2').style.display = 'none';
+            document.getElementById('overlay2').style.display = 'none';
             document.getElementById('fileInput').value = '';
+            document.getElementById('uploadResultStatus').textContent = '';
         }
 
         const cloudName = 'dlf856fpj';
@@ -319,13 +420,15 @@
 
         async function uploadFile() {
             const fileInput = document.getElementById('fileInput');
-            const result = document.getElementById('result');
+            const statusEl = document.getElementById('uploadResultStatus');
             const file = fileInput.files[0];
 
             if (!file) {
-                result.textContent = 'Please select a file';
+                statusEl.textContent = 'Please select a file';
                 return;
             }
+
+            statusEl.textContent = 'Uploading...';
 
             try {
                 const formData = new FormData();
@@ -345,18 +448,19 @@
                         document.getElementById('picture').src = response.secure_url;
                         showPopup("Profile picture uploaded successfully!", "success");
                     } else {
+                        statusEl.textContent = '';
                         showPopup("Error uploading picture.", "error");
                     }
                 };
 
                 xhr.onerror = () => {
+                    statusEl.textContent = '';
                     showPopup("Error uploading picture.", "error");
                 };
 
                 xhr.send(formData);
-                return { abort: () => { xhr.abort(); } };
             } catch (error) {
-                result.textContent = 'Error: ' + error.message;
+                statusEl.textContent = 'Error: ' + error.message;
             }
         }
     </script>
