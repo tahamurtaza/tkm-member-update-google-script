@@ -65,6 +65,24 @@
         .success-popup { background: #4CAF50; }
         .error-popup { background: #D9534F; }
         
+        .address-notice {
+    background-color: #fff8e6;
+    border-left: 5px solid #ffb800;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 20px;
+    margin-bottom: 12px;
+    color: #5c4300;
+    font-size: 13.5px;
+    line-height: 1.5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.address-notice strong {
+    color: #996300;
+    display: block;
+    margin-bottom: 4px;
+}
         /* Upload popup */
         .popup2 { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); z-index: 1001; width: 300px; text-align: center; }
         .overlay2 { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
@@ -145,7 +163,7 @@
                 return;
             }
             showLoader();
-            fetch("https://script.google.com/macros/s/AKfycbzkwxtx0Fr0EtGmbFeH52H2iH8grmRDZAgBps-7rcT-PkUPex23JBV5CA3cCJzo_5980w/exec?id=" + encodeURIComponent(memberId))
+            fetch("https://script.google.com/macros/s/AKfycbzTSV9sUQln35YbuN3gU0S7MQ2noA5aFshD36CG5gnty0ZSUoA2XINIdfZsM7mmMaJVrg/exec?id=" + encodeURIComponent(memberId))
                 .then(response => response.json())
                 .then(data => {
                     hideLoader();
@@ -181,18 +199,24 @@
                             <label>Calling No.:</label><input type="text" id="callingNumber" value="${data.callingNumber || ''}">
                             <label>WhatsApp No.:</label><input type="text" id="whatsappNumber" value="${data.whatsappNumber || ''}">
                             
-                            <label>Date of Birth (DD/MM/YYYY):</label>
+                            <label>Date of Birth:</label>
                             <div class="date-wrapper">
                                 <input type="date" id="dob" value="${dobForPicker}">
                             </div>
                             
-                            <label>Address Details:</label>
-                            <div class="address-group">
-                                <input type="text" id="addrFlat" value="${flatVilla}" placeholder="Flat / Villa Number">
-                                <input type="text" id="addrBldg" value="${bldgName}" placeholder="Building / Villa Name">
-                                <input type="text" id="addrStreet" value="${streetNo}" placeholder="Street Number / Name">
-                                <input type="text" id="addrLandmark" value="${landmark}" placeholder="Landmark (Optional)">
-                            </div>
+                            <!-- Strict Address Notice Banner -->
+<div class="address-notice">
+    <strong>⚠️ STRICT ADDRESS REQUIREMENT:</strong> 
+    Please enter the exact address where you are <u>currently residing</u>. For example, if your permanent home is in Sharjah but you are currently living in abroad for studies or work, you MUST enter your abroad address.
+</div>
+
+<label for="addrFlat">Current Residential Address (Where you live right now):</label>
+<div class="address-group">
+    <input type="text" id="addrFlat" value="${flatVilla}" placeholder="Flat / Apartment / Villa No. (Current Residence)">
+    <input type="text" id="addrBldg" value="${bldgName}" placeholder="Building Name / House Name">
+    <input type="text" id="addrStreet" value="${streetNo}" placeholder="Street No. / Area / Neighborhood">
+    <input type="text" id="addrLandmark" value="${landmark}" placeholder="Landmark / City Area (Optional)">
+</div>
 
                             <label>Current City Residing:</label><input type="text" id="city" value="${data.city || ''}">
                             <label>Country:</label><input type="text" id="country" value="${data.country || ''}">
@@ -364,7 +388,7 @@
             };
 
             showLoader();
-            fetch("https://script.google.com/macros/s/AKfycbzkwxtx0Fr0EtGmbFeH52H2iH8grmRDZAgBps-7rcT-PkUPex23JBV5CA3cCJzo_5980w/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbzTSV9sUQln35YbuN3gU0S7MQ2noA5aFshD36CG5gnty0ZSUoA2XINIdfZsM7mmMaJVrg/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(updatedData),
